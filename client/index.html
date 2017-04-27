@@ -1,100 +1,55 @@
-<!doctype html>
-<html lang="en" ng-app>
-  <head>
-    <title>Chat Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
-    <style>
-      body {
-        padding-top: 60px;
-      }
-    </style>
-    <script>
-      function ChatController($scope) {
-        var socket = io.connect();
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Player Inteactions in Aion</title>
+        
+        <!--CSS Dependencies-->
+        <link href='css/main.css' rel='stylesheet'>
+        
+        <!--JavaScript Dependencies-->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/plugins/CSSPlugin.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/easing/EasePack.min.js'></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenLite.min.js'></script>
 
-        $scope.messages = [];
-        $scope.roster = [];
-        $scope.name = '';
-        $scope.text = '';
-
-        socket.on('connect', function () {
-          $scope.setName();
-        });
-
-        socket.on('message', function (msg) {
-          $scope.messages.push(msg);
-          $scope.$apply();
-        });
-
-        socket.on('roster', function (names) {
-          $scope.roster = names;
-          $scope.$apply();
-        });
-
-        $scope.send = function send() {
-          console.log('Sending message:', $scope.text);
-          socket.emit('message', $scope.text);
-          $scope.text = '';
-        };
-
-        $scope.setName = function setName() {
-          socket.emit('identify', $scope.name);
-        };
-      }
-    </script>
-  </head>
-  <body>
-    <div class="container" ng-controller="ChatController">
-      <div class="navbar navbar-fixed-top navbar-inverse">
-        <div class="navbar-inner">
-          <div class="pull-right">
-            <a href="https://c9.io" class="brand">Cloud9 IDE</a>
-          </div>
+    <body>
+        <div id='container'>
+            <div id='header'>
+                <div id='headline'>
+                    Player Interactions in Aion
+                </div>
+                <div id='intro'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vehicula augue ex, pretium auctor nunc pulvinar at. Fusce dictum sollicitudin massa a facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sem nisl, aliquet dapibus viverra aliquam, elementum id elit. Aliquam sit amet arcu orci. Morbi tempor luctus est, ullamcorper efficitur ipsum sollicitudin eget. Integer finibus sem sapien, vitae scelerisque risus vulputate in.                </div>
+                </div>
+            
+            <div id='main'>
+                <div class='section' collasped='true'>
+                    <div class='title'>Communication</div>
+                    <div class='module'></div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Combat</div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Finance</div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Items</div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Enchantment</div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Travel</div>
+                </div>
+                <div class='section' collasped='true'>
+                    <div class='title'>Quests</div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="page-header">
-        <h1>Chat Example</h1>
-      </div>
-      <div class="row">
-        <div class="span3">
-          <ul class="nav nav-list well">
-            <li class="nav-header">Local Users</li>
-            <li ng-repeat="user in roster" ng-bind="user">
-            </li>
-          </ul>
-        </div>
-        <div class="span9">
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th class="span2">Name</th>
-                <th class="span7">Text</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="msg in messages">
-                <td class="span2" ng-bind="msg.name"></td>
-                <td class="span7" ng-bind="msg.text"></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="row controls">
-            <form ng-submit="send()">
-              <div class="span2"><input type="text" class="input-block-level" ng-model="name" ng-change="setName()" placeholder="Your Name"></div>
-              <div class="input-append span7">
-                <input type="text" class="span6" ng-model="text" placeholder="Message">
-                <input type="submit" class="span1 btn btn-primary" value="Send" ng-disabled="!text">
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/angular.min.js"></script>
-  </body>
+        
+        <!--Application-->
+        <script src='js/app.js'></script>   
+        <div class='result'></div>
+    </body>
 </html>

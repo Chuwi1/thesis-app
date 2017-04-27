@@ -1,0 +1,19 @@
+@mixin headline-style {
+    font-family: $default-font;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+@mixin header-columns {
+    float: left;
+    width: 50%;
+}
+
+@mixin section-title-style {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@mixin margins {
+    margin-bottom: 20px;
+}

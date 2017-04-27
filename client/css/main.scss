@@ -1,0 +1,52 @@
+// sass --watch --style expanded css/main.scss:css/main.css (change style to minifed in the future)
+
+// Definings
+@import "_variables.scss";
+@import "_mixins.scss";
+
+// Global Styles
+@import "_global.scss";
+ 
+#container {
+    position: relative;
+    width: 1080px;
+    height: 100%;
+    margin: 0 auto;
+}
+
+#header {
+    @include margins;
+    
+    // background: orange;    
+    height: 120px;
+    border-bottom: 1px solid gray;
+    
+    div {
+        @include header-columns;
+    }
+    
+    #headline {
+        @include headline-style;
+    }
+    
+    #intro {
+        
+    }
+}
+
+#main {
+    .section {
+        @include margins;
+        overflow:hidden;
+        background: lightgray;
+        height: 60px;
+
+        .title {
+            @include section-title-style;
+        }
+        
+        .module {
+            
+        }
+    }
+}

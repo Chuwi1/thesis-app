@@ -1,0 +1,42 @@
+body {
+  background: #f2f2f2;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-color: #333;
+  margin-top: 30px;
+}
+
+#container {
+  position: relative;
+  width: 1080px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+#header {
+  margin-bottom: 20px;
+  height: 120px;
+  border-bottom: 1px solid gray;
+}
+#header div {
+  float: left;
+  width: 50%;
+}
+#header #headline {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#main .section {
+  margin-bottom: 20px;
+  overflow: hidden;
+  background: lightgray;
+  height: 60px;
+}
+#main .section .title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=main.css.map */
