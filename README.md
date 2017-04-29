@@ -9,7 +9,7 @@ This repository contains updates and notes for the visualiztion app
 - Requests item names from [NotAion API](http://api.notaion.com/) (per 0.5s) as they are not in the log file
 
 #### [monster.js](https://github.com/neuralism/thesis-app/blob/master/monster.js)
-- Generates a [JSON file]() containing a list of monsters with one-word names 
+- Generates a [JSON file](https://raw.githubusercontent.com/neuralism/thesis-app/master/lists/single-name-monsters.json) containing a list of monsters with one-word names 
 - Extracts from a list containing [all monsters name](https://github.com/neuralism/thesis-app/blob/master/lists/monster-list.txt) scraped from [aiondatabase.net](http://aiondatabase.net)
 
 #### [insert.js](https://github.com/neuralism/thesis-app/blob/master/insert.js)
