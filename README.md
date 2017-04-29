@@ -10,7 +10,7 @@ This repository contains updates and notes for the visualiztion app
 
 #### [monster.js](https://github.com/neuralism/thesis-app/blob/master/monster.js)
 - Generates a [JSON file](https://raw.githubusercontent.com/neuralism/thesis-app/master/lists/single-name-monsters.json) containing a list of monsters with one-word names 
-- Monster names in Aion typically contain more than one-word
+- Monster names in Aion typically contain more than one word
 - This allows the parser differentiate between player and non-player characters
 - However, there are monsters with one-word names as well
 - Hence it's necessary for the parser to run through this list
