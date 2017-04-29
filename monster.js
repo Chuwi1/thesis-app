@@ -6,7 +6,7 @@ var lr = new LineByLineReader('lists/monster-list.txt');
 var monsters = [];
 
 lr.on('error', function (err) {
-	// 'err' contains error object
+    // 'err' contains error object
 });
 
 lr.on('line', function (line) {
@@ -21,7 +21,7 @@ lr.on('end', function () {
     
     var unique_monsters = monsters.filter(function(elem, index, self) {
         return index == self.indexOf(elem);
-    })
+    });
     
     fs.writeFileSync('lists/single-name-monsters.json', JSON.stringify(unique_monsters));
 });
