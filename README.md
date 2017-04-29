@@ -1,7 +1,7 @@
 ## Thesis App
 This repository contains updates and notes for the visualiztion app
 
-## Key files
+## Key Back End files
 
 #### [parser.js](https://github.com/neuralism/thesis-app/blob/master/parser.js)
 - Parses player log file based on specificed ruleset into JSON file
@@ -23,6 +23,8 @@ This repository contains updates and notes for the visualiztion app
 #### [server.js](https://github.com/neuralism/thesis-app/blob/master/server.js)
 - Listens for requests and queries database for a slice of the data
 - Transforms requested data and sends it over to the client
+
+## Key Front End Files
 
 #### [app.js](https://github.com/neuralism/thesis-app/blob/master/client/js/app.js)
 - Main JavaScript code for the visualization
