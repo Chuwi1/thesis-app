@@ -24,3 +24,11 @@ This repository contains updates and notes for the visualiztion app
 - Listens for requests and queries database for a slice of the data
 - Transforms requested data and sends it over to the client
 
+#### [app.js](https://github.com/neuralism/thesis-app/blob/master/client/js/app.js)
+- Main JavaScript code for the visualization
+
+#### [main.css](https://github.com/neuralism/thesis-app/blob/master/client/css/main.css)
+- Main CSS file generated using Sass
+ 
+#### [index.html](https://github.com/neuralism/thesis-app/blob/master/client/index.html)
+- Main index file
