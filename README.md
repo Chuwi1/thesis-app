@@ -11,5 +11,5 @@ This repository contains updates and notes for the visualiztion app
 
 #### [server.js]((https://github.com/neuralism/thesis-app/blob/master/server.js))
 - Listens for requests and queries database for a slice of the data
-- Transforms the data and sends it over to the client
+- Transforms requested data and sends it over to the client
 
