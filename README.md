@@ -10,7 +10,7 @@ This repository contains updates and notes for the visualiztion app
 
 #### [monster.js](https://github.com/neuralism/thesis-app/blob/master/monster.js)
 - Generates a [JSON file](https://raw.githubusercontent.com/neuralism/thesis-app/master/lists/single-name-monsters.json) containing a list of monsters with one-word names 
-- JSON is generated from a [list](https://github.com/neuralism/thesis-app/blob/master/lists/monster-list.txt) containing every monsters' name scraped from [aiondatabase.net](http://aiondatabase.net)
+- JSON is generated from a [list](https://github.com/neuralism/thesis-app/blob/master/lists/monster-list.txt) containing every monster's name scraped from [aiondatabase.net](http://aiondatabase.net)
 
 #### [insert.js](https://github.com/neuralism/thesis-app/blob/master/insert.js)
 - Inserts processed log file into Mongo database
