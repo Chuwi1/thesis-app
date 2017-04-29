@@ -3,6 +3,7 @@
 var fs = require('fs');
 var data = JSON.parse(fs.readFileSync('logs/player-01.json'));
 
+// Change player name accordingly
 var MongoClient = require('mongodb').MongoClient; // npm install mongodb
 var url = 'mongodb://' + process.env.IP + ':27017/player_01';
 

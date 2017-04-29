@@ -1,14 +1,15 @@
 var fs = require('fs');
-var express = require('express')
-var data = JSON.parse(fs.readFileSync('logs/player-01.json'));
-var app = express()
-var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://' + process.env.IP + ':27017/player_01';
-
+var express = require('express');
 var http = require('http');
 var path = require('path');
 
+var app = express();
 var server = http.createServer(app);
+
+var data = JSON.parse(fs.readFileSync('logs/player-01.json'));
+
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://' + process.env.IP + ':27017/player_01';
 
 var from = [];
 var to = [];
@@ -23,20 +24,7 @@ app.get('/test', function (req, res) {
       if (err) { return console.dir(err); }
       
       var collection = db.collection('player_01');
-    
-      // collection.aggregate ([
-      //   { $match : { whisper_to : { $ne : false } } },
-      //   { $group : { _id : "$whisper_to", messages_sent : { $sum : 1 }, timestamps : { $push : "$time" } } }
-      // ])
-      // .toArray(function(err, docs) {
-      //     if (err) { 
-      //         console.log(err);
-      //     } else {
-      //       to = docs;
-      //     }
-      //   }
-      // );
-      
+  
       collection.aggregate ([
         { $match : { whisper_from : { $ne : false } } },
         { $group : { _id : "$whisper_from", messages_received : { $sum : 1 }, timestamps : { $push : "$time" } } }
@@ -49,7 +37,7 @@ app.get('/test', function (req, res) {
           }
         }
       );
-
+      
       db.close();
 
   });
