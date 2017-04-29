@@ -12,7 +12,7 @@ This repository contains updates and notes for the visualiztion app
 - Generates a [JSON file](https://raw.githubusercontent.com/neuralism/thesis-app/master/lists/single-name-monsters.json) containing a list of monsters with one-word names 
 - Monster names in Aion typically contain more than one word
 - This allows the parser differentiate between player and non-player characters
-- However, there are monsters with one-word names as well
+- However, there are some monsters with one-word names
 - Hence it's necessary for the parser to run through this list
 - The JSON file is generated from a [list](https://github.com/neuralism/thesis-app/blob/master/lists/monster-list.txt) containing every monster's name
 - The list contains 42,600 names manually scraped from [aiondatabase.net](http://aiondatabase.net)
