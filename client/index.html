@@ -6,6 +6,9 @@
         <!--CSS Dependencies-->
         <link href='css/main.css' rel='stylesheet'>
         
+        <!--Fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        
         <!--JavaScript Dependencies-->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/plugins/CSSPlugin.min.js'></script>
@@ -27,29 +30,43 @@
         
         <div id='container'>
             
-            <!--Header Stuff-->
+            <!--Header-->
             
             <div id='header'>
                 <div id='headline'>
-                    Player Interactions in Aion
+                    Visualizing Interactions in Aion
                 </div>
                 <div id='intro'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vehicula augue ex, pretium auctor nunc pulvinar at. Fusce dictum sollicitudin massa a facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sem nisl, aliquet dapibus viverra aliquam, elementum id elit. Aliquam sit amet arcu orci. Morbi tempor luctus est, ullamcorper efficitur ipsum sollicitudin eget.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vehicula augue ex, pretium auctor nunc pulvinar at. Fusce dictum sollicitudin massa a facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sem nisl, aliquet dapibus viverra aliquam, elementum id elit. Aliquam sit amet arcu orci.
                 </div>
             </div>
 
-            <!--Visualization Stuff-->
+            <!--Visualization-->
 
             <div id='main'>
+                
+                <!--Finance-->
+                <div class='section' id='finance' collasped='true'>
+                    
+                    <!--Title-->
+                    <div class='title'>Finance</div>
+                    
+                    <!--Player 01-->
+                    <!--<div class='player-01'>-->
+                    <!--    <div class='name'>Player 01</div>-->
+                    <!--    <div class='earned-title'>Earned</div>-->
+                    <!--    <div class='earned-graph'></div>-->
+                    <!--    <div class='spent-title'>Spent</div>-->
+                    <!--    <div class='spent-graph'></div>-->
+                    <!--</div>-->
+                </div>
+                
                 <div class='section' collasped='true'>
                     <div class='title'>Communication</div>
                     <div class='module'></div>
                 </div>
                 <div class='section' collasped='true'>
                     <div class='title'>Combat</div>
-                </div>
-                <div class='section' id='finance' collasped='true'>
-                    <div class='title'>Finance</div>
                 </div>
                 <div class='section' collasped='true'>
                     <div class='title'>Items</div>
@@ -69,6 +86,5 @@
         <!--Application-->
  
         <script src='js/app.js'></script> 
-        <div class='result'></div>
     </body>
 </html>

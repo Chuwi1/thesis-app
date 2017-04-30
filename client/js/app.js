@@ -65,18 +65,31 @@ function load() {
             
         var colour = d3.scaleLinear()
             .domain([0, highest_amount])
-            .range(['blue', 'red']);
+            .range(['red', 'red']);
             
         // console.log(spent_list)
         
+        
         d3.select('#finance')
+            .append('div')
+            .html('Player 01');
+        
+        d3.select('#finance')
+            .append('div')
+            .html('Money Earned: ' + total_amount_earned.toLocaleString());
+        
+        d3.select('#finance')
+            .append('div')
+            .attr('class', 'earned-graph');
+        
+        d3.select('#finance .earned-graph')
             .selectAll('div')
             .data(earned_list)
             .enter()
             .append('div')
                 .attr('class', 'test tippy')
                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
-                .style('margin-top', '10px')   
+                // .style('margin-top', '10px')   
                 .style('margin-left', '1px')
                 // .style('border-left', '1px solid rgba(0,0,0,0.25)')
                 .style('float', 'left')
@@ -89,58 +102,43 @@ function load() {
                 .on('mouseout', function(d) {
                     TweenLite.to(this, 0, { opacity: 1 })
                 });
-
-       d3.select('#finance')
+                
+        d3.select('#finance')
+            .append('div')
+                .html('Money spent: ' + total_amount_spent.toLocaleString());
+        
+        d3.select('#finance')
+            .append('div')
+                .attr('class', 'spent-graph');
+            
+        d3.select('#finance .spent-graph')
             .selectAll('div')
             .data(spent_list)
             .enter()
             .append('div')
                 .attr('class', 'test tippy')
                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
-                .style('margin-top', '10px')   
+                // .style('margin-top', '10px')   
                 .style('margin-left', '1px')
                 // .style('border-left', '1px solid rgba(0,0,0,0.25)')
                 .style('float', 'left')
                 .style('background-color', function (d) { return String(colour(d)); })
                 .style('height', '30px')
                 .style('width', function(d) { return spent_scale(d) + 'px' })
-                .on('mouseover', function(d) { 
-                    TweenLite.to(this, 0, { opacity: 0.5 })
-                })
-                .on('mouseout', function(d) {
-                    TweenLite.to(this, 0, { opacity: 1 })
-                });       
-    
-    // ========
-    
-        // d3.selectAll('#finance')
-        //     .append('div')
-        //         .html('Player 01');
-                
-        // d3.selectAll('#finance')
-        //     .append('div')
-        //         .attr('class', 'money_earned tippy')
-        //         .attr('title', total_amount_earned.toLocaleString() + ' Kinah')
-        //         .style('width', (total_amount_earned / highest_amount) * 960 + 'px')
-        //         .style('height', '20px')
-        //         .style('background-color', '#ff00ff')
-        //         .html('Money Earned: ' + total_amount_earned.toLocaleString() + ' Kinah');
-            
-        // d3.selectAll('#finance')
-        //     .append('div')
-        //         .attr('class', 'money_spent tippy')
-        //         .attr('title', total_amount_spent.toLocaleString() + ' Kinah')
-        //         .style('width', (total_amount_spent / highest_amount) * 960 + 'px')
-        //         .style('height', '20px')
-        //         .style('background-color', '#00ff00')
-        //         .html('Money Spent: ' + total_amount_spent.toLocaleString() + ' Kinah');    
-
-        // console.log('earned: ' + total_amount_spent + ' / spent: ' + total_amount_earned + ' kinah');
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);   
+        
         tooltips();
-        // $('.test').mouseover(bitch);
     });
 }
 
+function mouse_over() {
+    TweenLite.to(this, 0, { opacity: 0.5 });
+}
+
+function mouse_out() {
+    TweenLite.to(this, 0, { opacity: 1 })
+}
 
 
 load();
