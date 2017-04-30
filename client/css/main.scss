@@ -9,7 +9,7 @@
  
 #container {
     position: relative;
-    width: 1080px;
+    width: 960px;
     height: 100%;
     margin: 0 auto;
 }
@@ -37,9 +37,9 @@
 #main {
     .section {
         @include margins;
-        overflow:hidden;
-        background: lightgray;
-        height: 60px;
+        // overflow:hidden;
+        // background: lightgray;
+        height: 120px;
 
         .title {
             @include section-title-style;
@@ -48,5 +48,9 @@
         .module {
             
         }
+    }
+    
+    .bar {
+        
     }
 }

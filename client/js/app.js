@@ -1,21 +1,147 @@
-$('.section').click(togglePanel);
+var total_amount_spent = 0;
+var total_amount_earned = 0;
+var highest_amount = 0;
 
-function togglePanel(event) {
-    if (event.currentTarget.getAttribute("collasped") == 'true') {
-        TweenLite.to(event.currentTarget, 0.3, { height: 200, ease: Power4.easeOut, background:'darkgray' });
-        event.currentTarget.setAttribute("collasped", false);
-    } else {
-        TweenLite.to(event.currentTarget, 0.3, { height: 80, ease: Power4.easeOut, background: 'lightgray' });
-        event.currentTarget.setAttribute("collasped", true);
-    }
-}
+var earned_list = [];
+var spent_list = [];
 
-function load() {
-    var names = '';
-    $.get('/test', function(data) {
+// $('.section').click(togglePanel);
+// function togglePanel(event) {
+//     if (event.currentTarget.getAttribute("collasped") == 'true') {
+//         TweenLite.to(event.currentTarget, 0.3, { height: 200, ease: Power4.easeOut, background:'darkgray' });
+//         event.currentTarget.setAttribute("collasped", false);
+//     } else {
+//         TweenLite.to(event.currentTarget, 0.3, { height: 120, ease: Power4.easeOut, background: 'lightgray' });
+//         event.currentTarget.setAttribute("collasped", true);
+//     }
+// }
 
+function tooltips() {
+    new Tippy('.tippy', {
+        position: 'top',
+        animation: 'fade',
+        duration: 0,
+        arrowSize: 'small',
+        arrow: true
     });
 }
+
+
+
+function load() {
+    
+    $.get('/query', function(data) {
+
+        // aggregate money earned
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].money_earned != false) {
+                total_amount_earned += data[i].money_earned;
+                earned_list.push(data[i].money_earned);
+            }
+        }
+        
+        // aggregate money spent
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].money_spent != false) {
+                total_amount_spent += data[i].money_spent;
+                spent_list.push(data[i].money_spent);                
+            }
+        }
+        
+        // check if earn more than spend / assign highest amount
+        if (total_amount_earned > total_amount_spent) {
+            highest_amount = total_amount_earned;
+        } else {
+            highest_amount = total_amount_spent;
+        }
+
+        var earned_scale = d3.scaleLinear()
+            .domain([0, highest_amount])
+            .range([1, 960 - (earned_list.length + 1) * 2]);
+        
+        var spent_scale = d3.scaleLinear()
+            .domain([0, highest_amount])
+            .range([1, 960 - (spent_list.length * 2)]);    
+            
+        var colour = d3.scaleLinear()
+            .domain([0, highest_amount])
+            .range(['blue', 'red']);
+            
+        // console.log(spent_list)
+        
+        d3.select('#finance')
+            .selectAll('div')
+            .data(earned_list)
+            .enter()
+            .append('div')
+                .attr('class', 'test tippy')
+                .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .style('margin-top', '10px')   
+                .style('margin-left', '1px')
+                // .style('border-left', '1px solid rgba(0,0,0,0.25)')
+                .style('float', 'left')
+                .style('background-color', function (d) { return String(colour(d)); })
+                .style('height', '30px')
+                .style('width', function(d) { return earned_scale(d) + 'px' })
+                .on('mouseover', function(d) { 
+                    TweenLite.to(this, 0, { opacity: 0.5 })
+                })
+                .on('mouseout', function(d) {
+                    TweenLite.to(this, 0, { opacity: 1 })
+                });
+
+       d3.select('#finance')
+            .selectAll('div')
+            .data(spent_list)
+            .enter()
+            .append('div')
+                .attr('class', 'test tippy')
+                .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .style('margin-top', '10px')   
+                .style('margin-left', '1px')
+                // .style('border-left', '1px solid rgba(0,0,0,0.25)')
+                .style('float', 'left')
+                .style('background-color', function (d) { return String(colour(d)); })
+                .style('height', '30px')
+                .style('width', function(d) { return spent_scale(d) + 'px' })
+                .on('mouseover', function(d) { 
+                    TweenLite.to(this, 0, { opacity: 0.5 })
+                })
+                .on('mouseout', function(d) {
+                    TweenLite.to(this, 0, { opacity: 1 })
+                });       
+    
+    // ========
+    
+        // d3.selectAll('#finance')
+        //     .append('div')
+        //         .html('Player 01');
+                
+        // d3.selectAll('#finance')
+        //     .append('div')
+        //         .attr('class', 'money_earned tippy')
+        //         .attr('title', total_amount_earned.toLocaleString() + ' Kinah')
+        //         .style('width', (total_amount_earned / highest_amount) * 960 + 'px')
+        //         .style('height', '20px')
+        //         .style('background-color', '#ff00ff')
+        //         .html('Money Earned: ' + total_amount_earned.toLocaleString() + ' Kinah');
+            
+        // d3.selectAll('#finance')
+        //     .append('div')
+        //         .attr('class', 'money_spent tippy')
+        //         .attr('title', total_amount_spent.toLocaleString() + ' Kinah')
+        //         .style('width', (total_amount_spent / highest_amount) * 960 + 'px')
+        //         .style('height', '20px')
+        //         .style('background-color', '#00ff00')
+        //         .html('Money Spent: ' + total_amount_spent.toLocaleString() + ' Kinah');    
+
+        // console.log('earned: ' + total_amount_spent + ' / spent: ' + total_amount_earned + ' kinah');
+        tooltips();
+        // $('.test').mouseover(bitch);
+    });
+}
+
+
 
 load();
 
