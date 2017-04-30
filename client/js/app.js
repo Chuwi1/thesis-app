@@ -26,11 +26,11 @@ function tooltips() {
     });
 }
 
-
-
 function load() {
     
     $.get('/query', function(data) {
+
+        // Remember to create a checker to check everyone's $$ to see which is the highest
 
         // aggregate money earned
         for (var i = 0; i < data.length; i++) {
@@ -76,7 +76,7 @@ function load() {
         
         d3.select('#finance')
             .append('div')
-            .html('Money Earned: ' + total_amount_earned.toLocaleString());
+            .html('Money Earned: ' + total_amount_earned.toLocaleString() + ' Kinah');
         
         d3.select('#finance')
             .append('div')
@@ -105,7 +105,7 @@ function load() {
                 
         d3.select('#finance')
             .append('div')
-                .html('Money spent: ' + total_amount_spent.toLocaleString());
+                .html('Money spent: ' + total_amount_spent.toLocaleString() + ' Kinah');
         
         d3.select('#finance')
             .append('div')
@@ -140,29 +140,28 @@ function mouse_out() {
     TweenLite.to(this, 0, { opacity: 1 })
 }
 
-
 load();
 
-var circleRadii = [40, 20, 10]
- 
- var svgContainer = d3.select("body").append("svg")
-                                     .attr("width", 600)
-                                     .attr("height", 100);
- 
- var circles = svgContainer.selectAll("circle")
-                            .data(circleRadii)
-                            .enter()
-                            .append("circle")
-                            .attr('cx', function (d) { return d * 10; })
-                            .attr('cy', 0);
+// var circleRadii = [40, 20, 10]
 
-var circleAttributes = circles
+// var svgContainer = d3.select("body").append("svg")
+//                                  .attr("width", 600)
+//                                  .attr("height", 100);
 
-                       .attr("r", function (d) { return d; })
-                       .style("fill", function(d) {
-                         var returnColor;
-                         if (d === 40) { returnColor = "green";
-                         } else if (d === 20) { returnColor = "purple";
-                         } else if (d === 10) { returnColor = "red"; }
-                         return returnColor;
-                       });
+// var circles = svgContainer.selectAll("circle")
+//                         .data(circleRadii)
+//                         .enter()
+//                         .append("circle")
+//                         .attr('cx', function (d) { return d * 10; })
+//                         .attr('cy', 0);
+
+// var circleAttributes = circles
+
+//                   .attr("r", function (d) { return d; })
+//                   .style("fill", function(d) {
+//                      var returnColor;
+//                      if (d === 40) { returnColor = "green";
+//                      } else if (d === 20) { returnColor = "purple";
+//                      } else if (d === 10) { returnColor = "red"; }
+//                      return returnColor;
+//                   });
