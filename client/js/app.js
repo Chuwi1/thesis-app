@@ -27,7 +27,7 @@ function tooltips() {
 }
 
 function load() {
-    
+
     $.get('/query', function(data) {
 
         // Remember to create a checker to check everyone's $$ to see which is the highest
@@ -57,18 +57,19 @@ function load() {
 
         var earned_scale = d3.scaleLinear()
             .domain([0, highest_amount])
-            .range([1, 960 - (earned_list.length + 1) * 2]);
+            // .range([1, 960 - earned_list.length]);
+            .range([1, 960 - (earned_list.length * 2) + 1]);
         
         var spent_scale = d3.scaleLinear()
             .domain([0, highest_amount])
-            .range([1, 960 - (spent_list.length * 2)]);    
-            
-        var colour = d3.scaleLinear()
-            .domain([0, highest_amount])
-            .range(['red', 'red']);
+            // .range([1, 960 - spent_list.length]);            
+            .range([1, 960 - (spent_list.length * 2) + 1]);    
             
         // console.log(spent_list)
         
+        // var color_shit = d3.scaleLinear()
+        //     .domain(0, highest_amount)
+        //     .range(['yellow', 'blue']);
         
         d3.select('#finance')
             .append('div')
@@ -87,42 +88,41 @@ function load() {
             .data(earned_list)
             .enter()
             .append('div')
-                .attr('class', 'test tippy')
+                .attr('class', 'tippy')
                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .attr('hover-color', 'indianred')
                 // .style('margin-top', '10px')   
                 .style('margin-left', '1px')
-                // .style('border-left', '1px solid rgba(0,0,0,0.25)')
                 .style('float', 'left')
-                .style('background-color', function (d) { return String(colour(d)); })
+                .style('background-color', 'indianred')
                 .style('height', '30px')
                 .style('width', function(d) { return earned_scale(d) + 'px' })
-                .on('mouseover', function(d) { 
-                    TweenLite.to(this, 0, { opacity: 0.5 })
-                })
-                .on('mouseout', function(d) {
-                    TweenLite.to(this, 0, { opacity: 1 })
-                });
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);
                 
         d3.select('#finance')
             .append('div')
+                .style('clear', 'left')
+                .attr('display', 'block')
                 .html('Money spent: ' + total_amount_spent.toLocaleString() + ' Kinah');
         
         d3.select('#finance')
             .append('div')
-                .attr('class', 'spent-graph');
+                .attr('class', 'spent-graph')
+                .style('width', '960px');
             
         d3.select('#finance .spent-graph')
             .selectAll('div')
             .data(spent_list)
             .enter()
             .append('div')
-                .attr('class', 'test tippy')
+                .attr('class', 'tippy')
                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .attr('hover-color', 'olive')                
                 // .style('margin-top', '10px')   
                 .style('margin-left', '1px')
-                // .style('border-left', '1px solid rgba(0,0,0,0.25)')
                 .style('float', 'left')
-                .style('background-color', function (d) { return String(colour(d)); })
+                .style('background-color', 'olive')
                 .style('height', '30px')
                 .style('width', function(d) { return spent_scale(d) + 'px' })
                 .on('mouseover', mouse_over)
@@ -133,14 +133,22 @@ function load() {
 }
 
 function mouse_over() {
-    TweenLite.to(this, 0, { opacity: 0.5 });
+    var color = d3.color(d3.select(this).attr('hover-color')).darker(2);
+    d3.select(this)
+        .transition()
+        .duration(400)
+        .style('background', color);
 }
 
 function mouse_out() {
-    TweenLite.to(this, 0, { opacity: 1 })
+    var color = d3.color(d3.select(this).attr('hover-color'));
+    d3.select(this)
+        .transition()
+        .duration(400)
+        .style('background', color);
 }
 
-load();
+// load();
 
 // var circleRadii = [40, 20, 10]
 
@@ -165,3 +173,141 @@ load();
 //                      } else if (d === 10) { returnColor = "red"; }
 //                      return returnColor;
 //                   });
+
+function finance() {
+    $.get('/finance', function(players) {
+        
+        var totals = [];
+        
+        // aggregate transactions        
+        for (var i = 0; i < players.length; i++) {
+            totals.push([
+                sum(players[i], 'money_earned'),
+                sum(players[i], 'money_spent')
+            ]);
+        }
+
+        // determine max value
+        var max = get_max(totals);
+
+        for (var i = 0; i < players.length; i++) {
+            
+            var id = String('p' + (i + 1));
+            
+            var earnings = [];
+            var spendings = [];
+            
+            for (var k = 0; k < players[i].length; k++) {
+                players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
+            }
+            
+            // define scales
+            var earnings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960 - earnings.length]);
+                .range([1, 960 - (earnings.length * 2) + 1]);
+    
+            var spendings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960 - spendings.length]);
+                .range([1, 960 - (spendings.length * 2) + 1]);        
+            
+            d3.select('#finance')
+                .append('div')
+                .attr('class', 'p1');
+                
+            d3.select('#finance .p1')
+                .append('div')
+                .attr('class', 'player-title')
+                .html('Player 1');
+            
+            d3.select('#finance .p1')
+                .append('div')
+                .attr('class', 'graph-title')
+                .html('Earned: ' + totals[0][0].toLocaleString() + ' Kinah');
+    
+            d3.select('#finance .p1')
+                .append('div')
+                .attr('class', 'earnings-graph');
+    
+            d3.select('#finance .p1 .earnings-graph')
+                .selectAll('div')
+                .data(earnings)
+                .enter()
+                .append('div')
+                .attr('class', 'tippy')
+                .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .attr('hover-color', 'indianred')
+                // .style('margin-top', '10px')   
+                .style('margin-left', '1px')
+                .style('float', 'left')
+                .style('background-color', 'indianred')
+                .style('height', '30px')
+                .style('width', function(d) { return earnings_scale(d) + 'px' })
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);     
+        
+            d3.select('#finance .p1')
+                .append('div')
+                .style('display', 'block')
+                .style('clear', 'left')
+                .attr('class', 'graph-title')
+                .html('Spent: ' + totals[0][0].toLocaleString() + ' Kinah');
+    
+            d3.select('#finance .p1')
+                .append('div')
+                .attr('class', 'spendings-graph');            
+            
+            d3.select('#finance .p1 .spendings-graph')
+                .selectAll('div')
+                .data(spendings)
+                .enter()
+                .append('div')
+                .attr('class', 'tippy')
+                .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+                .attr('hover-color', 'indianred')
+                // .style('margin-top', '10px')   
+                .style('margin-left', '1px')
+                .style('float', 'left')
+                .style('background-color', 'indianred')
+                .style('height', '30px')
+                .style('width', function(d) { return spendings_scale(d) + 'px' })
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);     
+        }
+
+
+        tooltips();    
+    });
+}
+
+function sum(player, attribute) {
+    var accumulator = 0;
+    for (var i = 0; i < player.length; i++) {
+        accumulator += player[i][attribute];
+    }
+    return accumulator;
+}
+
+function get_max(values) {
+    
+    var accumulator = 0;
+
+    // flatten array incase it's multi-dimensional
+    function flatten(arr) {
+      return arr.reduce(function(a, b) {
+        return a.concat(Array.isArray(b) ? flatten(b) : b);
+      }, []);
+    }
+
+    values = flatten(values);
+
+    for (var i = 0; i < values.length; i++) {
+        if (values[i] > accumulator) {
+            accumulator = values[i];
+        }
+    }
+    return accumulator;
+}
+
+finance();

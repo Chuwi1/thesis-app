@@ -46,8 +46,9 @@
             @include section-title-style;
         }
         
-        .player-02 {
-            display: block;
+        div {
+            // display: block;
+            // clear: left;
         }
     }
     
