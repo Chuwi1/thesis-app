@@ -1,7 +1,7 @@
 body {
   background: #f2f2f2;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-color: #333;
   margin-top: 30px; }
 
@@ -30,7 +30,31 @@ div {
   margin-bottom: 20px;
   position: relative; }
   #main .section .title {
+    font-size: 1.8em;
+    font-weight: bold;
+    border-bottom: 1px solid black; }
+  #main .section .player-name {
     font-size: 1.2em;
-    font-weight: bold; }
+    font-weight: bold;
+    display: block;
+    clear: left;
+    margin-top: 20px; }
+  #main .section .graph-descriptor {
+    margin-top: 10px;
+    margin-bottom: 3px;
+    display: block;
+    clear: left; }
+  #main .section .graph {
+    height: 20px;
+    display: block;
+    clear: left; }
+  #main .section .graph .unit {
+    float: left;
+    height: 20px;
+    margin-left: 1px; }
+
+.tippy-tooltip.aion-theme {
+  font-size: 1em;
+  font-family: 'Roboto Mono', monospace; }
 
 /*# sourceMappingURL=main.css.map */

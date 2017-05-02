@@ -44,15 +44,39 @@
 
         .title {
             @include section-title-style;
+            border-bottom: 1px solid black;
         }
         
-        div {
-            // display: block;
-            // clear: left;
+        .player-name {
+            @include player-title-style;
+            display: block;
+            clear: left;
+            margin-top: 20px;
+        }
+        
+        .graph-descriptor {
+            margin-top: 10px;
+            margin-bottom: 3px;
+            display: block;
+            clear: left;
+        }
+        
+        .graph {
+            height: $bar-height;
+            display: block;
+            clear: left;
+        }
+        
+        // each unit on the graph
+        .graph .unit {
+            float: left;
+            height: $bar-height;
+            margin-left: 1px;
         }
     }
-    
-    .bar {
-        
-    }
+}
+
+.tippy-tooltip.aion-theme {
+    font-size: 1em;
+    font-family: 'Roboto Mono', monospace;  
 }

@@ -104,19 +104,106 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
   }
 );
 
+// ===============
+//  Communication
+// ===============
+
+app.get('/communication', function (req, res) {
+  
+  var res_data = [];
+  var num_connections = 0;
+  
+  // Player 1
+  MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_01', function(err, db) {
+
+    // aggregation
+    db.collection('player_01').aggregate([
+      
+      { $match : { $or : [ { whisper_to : { $ne : false } }, { whisper_from : { $ne : false } } ] } },
+      { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, time : { $push : '$time' } } }
+      // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, instances : { $push : { whisper_length : '$whisper_length', time : '$time' } } } },  
+   
+    ]).toArray(function(err, docs) {
+      
+      // insert into array
+      res_data[0] = docs;
+      num_connections++;
+      db.close();
+      
+      // check connection
+      if (num_connections == 3) { 
+        res.json(res_data);
+      };        
+    });
+  }); // End Player 1
+
+  // Player 2
+  MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_02', function(err, db) {
+
+    // aggregation
+    db.collection('player_02').aggregate([
+      
+      { $match : { $or : [ { whisper_to : { $ne : false } }, { whisper_from : { $ne : false } } ] } },
+      { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, time : { $push : '$time' } } }
+      // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, instances : { $push : { whisper_length : '$whisper_length', time : '$time' } } } },  
+   
+    ]).toArray(function(err, docs) {
+      
+      // insert into array
+      res_data[1] = docs;
+      num_connections++;
+      db.close();
+      
+      // check connection
+      if (num_connections == 3) { 
+        res.json(res_data);
+      };        
+    });
+  }); // End Player 2  
+
+  // Player 3
+  MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_03', function(err, db) {
+
+    // aggregation
+    db.collection('player_03').aggregate([
+      
+      { $match : { $or : [ { whisper_to : { $ne : false } }, { whisper_from : { $ne : false } } ] } },
+      { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, time : { $push : '$time' } } }
+      // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, instances : { $push : { whisper_length : '$whisper_length', time : '$time' } } } },  
+   
+    ]).toArray(function(err, docs) {
+      
+      // insert into array
+      res_data[2] = docs;
+      num_connections++;
+      db.close();
+      
+      // check connection
+      if (num_connections == 3) { 
+        res.json(res_data);
+      };        
+    });
+  }); // End Player 3
+
+});
+
+// =========
+//  Finance
+// =========
+
 app.get('/finance', function (req, res) {
 
   var res_data = [];
   var num_connections = 0;
 
-  // Player 01
+  // Player 1
   MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_01', function(err, db) {
 
     // aggregation
     db.collection('player_01').aggregate([
 
       { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1, time : 1 } }
+      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
   
     ]).toArray(function(err, docs) {
       
@@ -130,16 +217,16 @@ app.get('/finance', function (req, res) {
         res.json(res_data);
       };        
     });
-  });
+  }); // End Player 1
   
-  // Player 02
+  // Player 2
   MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_02', function(err, db) {
     
     // aggregation
     db.collection('player_02').aggregate([
 
       { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1, time : 1 } }
+      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
   
     ]).toArray(function(err, docs) {
       
@@ -153,16 +240,16 @@ app.get('/finance', function (req, res) {
         res.json(res_data);
       };        
     });
-  });
+  }); // End Player 2
   
-  // Player 03
+  // Player 3
   MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_03', function(err, db) {
     
     // aggregation
     db.collection('player_03').aggregate([
 
       { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1, time : 1 } }
+      { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
   
     ]).toArray(function(err, docs) {
       
@@ -176,6 +263,6 @@ app.get('/finance', function (req, res) {
         res.json(res_data);
       };        
     });
-  });
+  }); // End Player 3
   
 });
