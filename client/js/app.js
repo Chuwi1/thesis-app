@@ -1,171 +1,570 @@
-// Require
-var fs = require('fs');
-var express = require('express');
-var http = require('http');
-var path = require('path');
-var MongoClient = require('mongodb').MongoClient;
+var total_amount_spent = 0;
+var total_amount_earned = 0;
+var highest_amount = 0;
 
-// App and Server Stuff
-var app = express();
-var server = http.createServer(app);
+var earned_list = [];
+var spent_list = [];
 
-// Mongo URL
-var url = 'mongodb://' + process.env.IP + ':27017/';
+// $('.section').click(togglePanel);
+// function togglePanel(event) {
+//     if (event.currentTarget.getAttribute("collasped") == 'true') {
+//         TweenLite.to(event.currentTarget, 0.3, { height: 200, ease: Power4.easeOut, background:'darkgray' });
+//         event.currentTarget.setAttribute("collasped", false);
+//     } else {
+//         TweenLite.to(event.currentTarget, 0.3, { height: 120, ease: Power4.easeOut, background: 'lightgray' });
+//         event.currentTarget.setAttribute("collasped", true);
+//     }
+// }
 
-// Player List
-var p = ['player_01', 'player_02', 'player_03'];
+$('button').click(test_this_bullshit);
 
-app.use(express.static('client'));
+function test_this_bullshit() {
+    d3.select('#main')
+        .selectAll('*')
+        .remove();
+        
+}
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
-    var addr = server.address();
-    console.log(addr.address + ": " + addr.port)
-  }
-);
 
-// Code References 
+function tooltips() {
+    new Tippy('.tippy', {
+        theme: 'aion',
+        position: 'top',
+        animation: 'fade',
+        duration: 0,
+        arrowSize: 'small',
+        arrow: true
+    });
+}
+    
+// function load() {
 
-// collection.aggregate([
-//     { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-//     { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
-// ]);
+//     $.get('/query', function(data) {
 
-// app.get('/whisper_to/:name', function (req, res) {
-//   var name = req.params.name;
-//   res.send(name);
-// });
+//         // Remember to create a checker to check everyone's $$ to see which is the highest
 
+//         // aggregate money earned
+//         for (var i = 0; i < data.length; i++) {
+//             if (data[i].money_earned != false) {
+//                 total_amount_earned += data[i].money_earned;
+//                 earned_list.push(data[i].money_earned);
+//             }
+//         }
+        
+//         // aggregate money spent
+//         for (var i = 0; i < data.length; i++) {
+//             if (data[i].money_spent != false) {
+//                 total_amount_spent += data[i].money_spent;
+//                 spent_list.push(data[i].money_spent);                
+//             }
+//         }
+        
+//         // check if earn more than spend / assign highest amount
+//         if (total_amount_earned > total_amount_spent) {
+//             highest_amount = total_amount_earned;
+//         } else {
+//             highest_amount = total_amount_spent;
+//         }
+
+//         var earned_scale = d3.scaleLinear()
+//             .domain([0, highest_amount])
+//             // .range([1, 960 - earned_list.length]);
+//             .range([1, 960 - (earned_list.length * 2) + 1]);
+        
+//         var spent_scale = d3.scaleLinear()
+//             .domain([0, highest_amount])
+//             // .range([1, 960 - spent_list.length]);            
+//             .range([1, 960 - (spent_list.length * 2) + 1]);    
+            
+//         // console.log(spent_list)
+        
+//         // var color_shit = d3.scaleLinear()
+//         //     .domain(0, highest_amount)
+//         //     .range(['yellow', 'blue']);
+        
+//         d3.select('#finance')
+//             .append('div')
+//             .html('Player 01');
+        
+//         d3.select('#finance')
+//             .append('div')
+//             .html('Money Earned: ' + total_amount_earned.toLocaleString() + ' Kinah');
+        
+//         d3.select('#finance')
+//             .append('div')
+//             .attr('class', 'earned-graph');
+        
+//         d3.select('#finance .earned-graph')
+//             .selectAll('div')
+//             .data(earned_list)
+//             .enter()
+//             .append('div')
+//                 .attr('class', 'tippy')
+//                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+//                 .attr('hover-color', 'indianred')
+//                 // .style('margin-top', '10px')   
+//                 .style('margin-left', '1px')
+//                 .style('float', 'left')
+//                 .style('background-color', 'indianred')
+//                 .style('height', '30px')
+//                 .style('width', function(d) { return earned_scale(d) + 'px' })
+//                 .on('mouseover', mouse_over)
+//                 .on('mouseout', mouse_out);
+                
+//         d3.select('#finance')
+//             .append('div')
+//                 .style('clear', 'left')
+//                 .attr('display', 'block')
+//                 .html('Money spent: ' + total_amount_spent.toLocaleString() + ' Kinah');
+        
+//         d3.select('#finance')
+//             .append('div')
+//                 .attr('class', 'spent-graph')
+//                 .style('width', '960px');
+            
+//         d3.select('#finance .spent-graph')
+//             .selectAll('div')
+//             .data(spent_list)
+//             .enter()
+//             .append('div')
+//                 .attr('class', 'tippy')
+//                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
+//                 .attr('hover-color', 'olive')                
+//                 // .style('margin-top', '10px')   
+//                 .style('margin-left', '1px')
+//                 .style('float', 'left')
+//                 .style('background-color', 'olive')
+//                 .style('height', '30px')
+//                 .style('width', function(d) { return spent_scale(d) + 'px' })
+//                 .on('mouseover', mouse_over)
+//                 .on('mouseout', mouse_out);   
+        
+//         tooltips();
+//     });
+// }
+
+function mouse_over() {
+    var color = d3.color(d3.select(this).attr('hover-color')).darker(2);
+    d3.select(this)
+        .transition()
+        .duration(400)
+        .style('background', color);
+}
+
+function mouse_out() {
+    var color = d3.color(d3.select(this).attr('hover-color'));
+    d3.select(this)
+        .transition()
+        .duration(400)
+        .style('background', color);
+}
+
+// load();
+
+// var circleRadii = [40, 20, 10]
+
+// var svgContainer = d3.select("body").append("svg")
+//                                  .attr("width", 600)
+//                                  .attr("height", 100);
+
+// var circles = svgContainer.selectAll("circle")
+//                         .data(circleRadii)
+//                         .enter()
+//                         .append("circle")
+//                         .style('fill', 'black')
+//                         .attr('r', 100)
+//                         .attr('cx', function (d) { return d * 10; })
+//                         .attr('cy', 0);
+
+
+
+communication();
+finance();
+damage();
 
 // ========
 //  Damage
 // ========
-// save this for daniel to see
-// app.get('/damage', function(req, res) {
-  
-//   var data = [];
-//   var connections = 0;
-  
-// // Player 1
-//   MongoClient.connect('mongodb://' + process.env.IP + ':27017/player_01', function(error, db) {
 
-//     // aggregation
-//     db.collection('player_01').aggregate([
-      
-//       // { $match : { $or : [ { damage_inflicted : { $ne : false } }, { damage_received : { $ne : false } } ] } },
-//       { $match : { damage_inflicted : { $ne : false } } },
-//       { $project : 
-//           { 
-//             _id : false, 
-//             damage_inflicted : 1,
-//             // damage_received : 1,
-//             // damage_critical : 1,
-//             // damage_skill : 1,
-//             // damage_target : 1,
-//             // damage_target_npc : 1,
-//             // damage_target_player : 1,
-//             // damage_source : 1,
-//             // damage_source_npc : 1,
-//             // damage_source_player : 1            
-//           }
-//       }
+function damage() {
+    
+    $.get('/damage', function(players){
+       
+        
+        
+    });
+}
 
-//     ]).toArray(function(error, docs) {
-      
-//       var test = [];
-      
-//       for (var i = 0; i < docs.length; i++) {
-//         test.push(docs[i].damage_inflicted);
-//       }
-      
-//       data[0] = docs;
-//       connections++;
-//       db.close();
-      
-//       // check connection
-//       if (connections == 1) { 
-//         res.json(test);
-//       };        
+// ========
+//  Damage
+// ========
+// Save this as an example to show Daniel
+
+// function damage() {
+    
+//     $.get('/damage', function(players) {
+        
+//         var test = [100, 200, 100, 300];
+        
+//         var id = String('.p1');
+        
+//         var c_scheme = ['#0D47A1', '#0D47A1'];
+        
+//         // append visualisation
+//         d3.select('#damage')
+//         .append('div')
+//             .attr('class', id.replace('.', ''))
+//         .append('div')
+//             .attr('class', 'player-name')
+//             .html('Player 1');
+        
+//         // damages
+//         d3.select('#damage ' + id)
+//         .append('div')
+//             .attr('class', 'graph-descriptor')
+//             .html('Title');
+        
+//         // append the graph
+//         d3.select('#damage ' + id)
+//             .append('svg')
+//                 .attr('class', '')
+//                 .attr('width', 960)
+//                 .attr('height', 200)
+//             .selectAll('circle')
+//                 .data(players)
+//                 .enter()
+//             .append('circle')
+//                 .attr('r', function(d) { return 0; })
+//                 .attr('cx', function(d, i) { return i / players.length * 960; })
+//                 .attr('cy', 100)
+//                 .style('stroke', 'gray')
+//                 .style('stroke-width', 0.1)                
+//                 // .style('opacity', 0.1)
+//                 .style('fill', 'none')
+                
+//                 .transition()
+//                     .duration(200)
+//                     .delay(function (d, i) { return i * 0.2 })
+//                     .attr('r', function(d) { return d / 400; });  
+//         tooltips();         
 //     });
-//   }); // End Player 1
-  
-// });
+// }
+
+// ===============
+//  Communication
+// ===============
+
+function communication() {
+    
+    $.get('/chat', function(players) {
+
+        // Player 1
+        // whisper_tos[0] = [friend, total_words]
+        //                  [friend, total_words]
+        //                  [friend, total_words] ...
+        
+        // Player 2
+        // whisper_tos[1] = [friend, total_words]
+        //                  [friend, total_words]
+        //                  [friend, total_words] ...
+    
+        // holder for to and from whisper lists
+        var whisper_tos = [];
+        var whisper_froms = [];
+        
+        // holders for total values
+        var total_tos = 0;
+        var total_froms = 0;
+        var totals = 0;
+
+        // colour codings
+        var c_scheme = ['#0D47A1', '#0D47A1'];
+        
+        // holder for max value
+        var max = 0;
+        
+        // loop thru all 3 players and organise into incoming and outgoing
+        for (var i = 0; i < players.length; i++) {
+            
+            var to_list = [];
+            var from_list = [];
+
+            // loop thru all the friends of each player
+            for (var k = 0; k < players[i].length; k++) {
+   
+                if (players[i][k]._id.to != false) {
+                    // push friend and total words into array
+                    to_list.push([players[i][k]._id.to, sum(players[i][k].whisper_length)]);
+                }
+               
+                if (players[i][k]._id.from != false) {
+                    // push friend and total words into array
+                    from_list.push([players[i][k]._id.from, sum(players[i][k].whisper_length)]);
+                }
+            }
+            
+            to_list = _.sortBy(to_list, 1).reverse();
+            from_list = _.sortBy(from_list, 1).reverse();            
+            
+            whisper_tos[i] = to_list;
+            whisper_froms[i] = from_list;
+            
+            // if player == to nothing (e.g. vin -.-) 
+            if (players[i] == '') {
+                 // set the whisper stuff to []
+                whisper_tos[i] = whisper_froms[i] = [];
+            }
+            
+        } // end of loop
+        
+        total_tos = sum(whisper_tos[0], 1);
+        total_froms = sum(whisper_froms[0], 1);
+        totals = [total_tos, total_froms];
+        console.log(totals)
+        // assign highest value - for use on scaleLinear
+        // max = get_max(totals);
+        max = 7641;
+
+        // console.log(whisper_tos);
+        // console.log(whisper_froms);
+
+        // loop to populate visualisation
+        for (var i = 0; i < players.length; i++) {
+            
+            var id = String('.p' + (i + 1));
+        
+            var tos_scale = d3.scaleLinear()
+                .domain([0, max])
+                .range([1, 960 - (whisper_tos[i].length * 2) + 1]);
+    
+            var froms_scale = d3.scaleLinear()
+                .domain([0, max])
+                .range([1, 960 - (whisper_froms[i].length * 2) + 1]);  
+
+            // append visualisation
+            d3.select('#communication')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+
+           // whisper tos
+            d3.select('#communication ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor')
+                    .html('Outgoing (' + sum(whisper_tos[i], 1) + ' words / ' + whisper_tos[i].length + ' players)');
+           
+            d3.select('#communication ' + id)
+                .append('div')
+                    .attr('class', 'graph earnings')
+                .selectAll('div')
+                    .data(whisper_tos[i])
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return d[0] + ' (' + d[1] + ' words)' })
+                    .attr('hover-color', c_scheme[0])
+                    .style('background-color', c_scheme[0])
+                    .style('width', function(d) { return tos_scale(d[1]) + 'px' })
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);
+
+           // whisper froms
+            d3.select('#communication ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor')
+                    .html('Incoming (' + sum(whisper_froms[i], 1) + ' words / ' + whisper_froms[i].length + ' players)');
+           
+            d3.select('#communication ' + id)
+                .append('div')
+                    .attr('class', 'graph earnings')
+                .selectAll('div')
+                    .data(whisper_froms[i])
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return d[0] + ' (' + d[1] + ' words)' })
+                    .attr('hover-color', c_scheme[1])
+                    .style('background-color', c_scheme[1])
+                    .style('width', function(d) { return froms_scale(d[1]) + 'px' })
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out);
 
 
-// ======
-//  Chat
-// ======
-
-// Mongo Aggregation
-var chat_pipeline = [
-  { $match : { $or : [ { whisper_to : { $ne : false } }, { whisper_from : { $ne : false } } ] } },
-  { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, time : { $push : '$time' } } }
-  // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, instances : { $push : { whisper_length : '$whisper_length', time : '$time' } } } },  
-];
-
-// Reshape Aggregated Data
-function chat_data(d) {
-  return d; 
+            d3.select('#communication ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html('Player ' + (i + 1) + ' spent a total of $0,000 across 0 transactions. An average of $0,000 a day. Highest amount spent is $0,000 . Lowest is $0,000 .');         }
+        
+        tooltips(); 
+    });
 }
 
-// =========
+
+// ===============
 //  Finance
-// =========
+// ===============
 
-// Mongo Aggregation
-var finance_pipeline = [
-  { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-  { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
-];
+function finance() {
+    
+    $.get('/finance', function(players) {
+        
+        // multi-dimensional array containing max earned and spent for each player
+        var totals = [];
+        
+        // colour codings
+        var c_scheme = ['#E57373', '#E57373'];
+        
+        // holder for max value
+        var max = 0;
+        
+        // aggregate transactions        
+        for (var i = 0; i < players.length; i++) {
+            totals.push([
+                sum(players[i], 'money_earned'),
+                sum(players[i], 'money_spent')
+            ]);
+        }
 
-// Reshape Aggregated Data
-function finance_data(d) {
-  return d; 
+        // assign highest value - for use on scaleLinear
+        max = get_max(totals);
+        
+        // loop to populate visualisation
+        for (var i = 0; i < players.length; i++) {
+            
+            var id = String('.p' + (i + 1));
+            
+            var earnings = [];
+            var spendings = [];
+            
+            // push spent and earned variables to each array (what about timescale?)
+            for (var k = 0; k < players[i].length; k++) {
+                players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
+            }
+            
+            // define scales
+            var earnings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960 - earnings.length]);
+                .range([1, 960 - (earnings.length * 2) + 1]);
+    
+            var spendings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960 - spendings.length]);
+                .range([1, 960 - (spendings.length * 2) + 1]);        
+            
+            // append visualisation
+            d3.select('#finance')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+            
+            // earnings
+            d3.select('#finance ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor')
+                    .html('Earned ' + delimit(totals[i][0]) + ' Kinah' + ' (' + rmt(totals[i][0]) + ')');
+    
+            d3.select('#finance ' + id)
+                .append('div')
+                    .attr('class', 'graph earnings')
+                .selectAll('div')
+                    .data(earnings)
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('hover-color', c_scheme[0])
+                    .style('background-color', c_scheme[0])
+                    .style('opacity', 0)                     
+                    .style('width', function(d) { return earnings_scale(d) + 'px' } )
+                    .on('mouseover', mouse_over)
+                    .on('mouseout', mouse_out)
+                .transition()
+                    .duration(50)
+                    .delay(function (d, i) { return i * 10 })
+                    .style('opacity', 1);   
+                    
+            // spendings
+            d3.select('#finance ' + id)
+                .append('div')
+                .attr('class', 'graph-descriptor')
+                .html('Spent: ' + delimit(totals[i][1]) + ' Kinah' + ' (' + rmt(totals[i][1]) + ')');
+    
+            d3.select('#finance ' + id)
+                .append('div')
+                    .attr('class', 'graph spendings')
+                .selectAll('div')
+                    .data(spendings)
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('hover-color', c_scheme[1])
+                    .style('background-color', c_scheme[1])
+                    .style('opacity', 0)                    
+                    .style('width', function(d) { return spendings_scale(d) + 'px' })
+                    .on('mouseover', mouse_over)
+                    .on('mouseout', mouse_out)
+                .transition()
+                    .duration(50)
+                    .delay(function (d, i) { return i * 10 })
+                    .style('opacity', 1);
+            
+            d3.select('#finance ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html('Player spent a total of $0,000 across 0 transactions. An average of $0,000 a day. Highest amount spent is $0,000 . Lowest is $0,000 .');                    
+        }
+
+        tooltips();    
+    });
 }
 
-// Lookup Tables
-// They perform faster than switch and if-else statements
-// https://jsperf.com/if-switch-lookup-table/10
+function sum(player, attribute) {
+    var accumulator = 0;
+    for (var i = 0; i < player.length; i++) {
+        if (attribute == null) {
+            accumulator += player[i];            
+        } else {
+            accumulator += player[i][attribute];
+        }
 
-// Aggregation Pipeline
-var pipeline = {
-  '/finance': function() { return finance_pipeline; },
-  '/chat': function() { return chat_pipeline; }
-};
-
-// Reshape the Data
-var reshape = {
-  '/finance': function(d) { return finance_data(d); },
-  '/chat': function(d) { return chat_data(d); }  
+    }
+    return accumulator;
 }
 
-// Assign Get Method
-app.get('/finance', callback);
-app.get('/chat', callback);
+function get_max(values) {
+    var accumulator = 0;
 
-function callback(req, res) {
+    // flatten array incase it's multi-dimensional
+    // https://www.codetuts.tech/flatten-deep-nested-array-object/#othersolutions
+    function flatten(arr) {
+      return arr.reduce(function(a, b) {
+        return a.concat(Array.isArray(b) ? flatten(b) : b);
+      }, []);
+    }
 
-  var res_data = [];
-  var conns = 0;
-  
-  for (var i = 0; i < p.length; i++) {
-    MongoClient.connect(url + p[i], function(e, db) {
-      console.log(db);
-      var index = Number(db.databaseName.split('0')[1]) - 1;
-      db.collection(p[index]).aggregate(pipeline[req.url]()).toArray(function(e, d) {
-        res_data[index] = reshape[req.url](d);
-        db.close();
-        conns++;
-        check(conns, res, res_data);
-      });
-    });  
-  }
+    values = flatten(values);
 
+    for (var i = 0; i < values.length; i++) {
+        if (values[i] > accumulator) {
+            accumulator = values[i];
+        }
+    }
+    return accumulator;
 }
 
-// if number of connections to mongo db is 3 (number of players) send stuff over
-function check(conns, res, res_data) {
-  if (conns == p.length) {
-    res.json(res_data);
-  }
+function rmt(d) {
+    var rate = 0.00000002185;
+    return 'USD $' + (d * rate).toFixed(2)
+}
+
+function delimit(d) {
+    // thousand / digit group separator
+    return d.toLocaleString();
 }
 

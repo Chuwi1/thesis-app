@@ -2,8 +2,7 @@ body {
   background: #f2f2f2;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 13px;
-  font-color: #333;
-  margin-top: 30px; }
+  font-color: #333; }
 
 div {
   display: block; }
@@ -15,9 +14,8 @@ div {
   margin: 0 auto; }
 
 #header {
-  margin-bottom: 20px;
   height: 120px;
-  border-bottom: 1px solid gray; }
+  border-top: 2px solid black; }
   #header div {
     float: left;
     width: 50%; }
@@ -25,36 +23,49 @@ div {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-size: 2em;
     font-weight: bold; }
+  #header #intro {
+    margin-top: 5px; }
+
+#nav {
+  margin-bottom: 10px; }
 
 #main .section {
   margin-bottom: 20px;
   position: relative; }
   #main .section .title {
     font-size: 1.8em;
-    font-weight: bold;
-    border-bottom: 1px solid black; }
+    font-weight: 600;
+    border-top: 2px solid black; }
   #main .section .player-name {
     font-size: 1.2em;
     font-weight: bold;
+    border-top: 1px dotted gray;
     display: block;
     clear: left;
-    margin-top: 20px; }
+    margin-top: 30px;
+    padding-top: 3px; }
   #main .section .graph-descriptor {
+    font-family: "Roboto Mono", monospace;
     margin-top: 10px;
     margin-bottom: 3px;
     display: block;
     clear: left; }
   #main .section .graph {
-    height: 20px;
+    height: 30px;
+    background-color: #e9e9e9;
     display: block;
     clear: left; }
   #main .section .graph .unit {
     float: left;
-    height: 20px;
+    height: 30px;
     margin-left: 1px; }
+  #main .section .report {
+    margin-top: 20px;
+    width: 480px;
+    color: #999; }
 
 .tippy-tooltip.aion-theme {
   font-size: 1em;
-  font-family: 'Roboto Mono', monospace; }
+  font-family: "Roboto Mono", monospace; }
 
 /*# sourceMappingURL=main.css.map */

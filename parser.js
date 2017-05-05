@@ -5,8 +5,8 @@
 
 /* Notes:
 [DONE] TO DO: SORT OUT THE CRITICAL DMG PART. IT'S REGISTERING OTHER PPLS CRIT ATTKS 
-TO DO: Groups, Alliances, Leagues, add Player's Out Going Messages (non-whisper)
-Consider. if the player is from -SL then remove SL from the list? But some players play on many servers... so maybe remove servers altogether?
+[DONE] Consider. if the player is from -SL then remove SL from the list? But some players play on many servers... so maybe remove servers altogether?
+[DONE: ommited leauges TO DO: Groups, Alliances, Leagues, add Player's Out Going Messages (non-whisper)
 Consider getting word count of the private whispers
 Consider user outgoing chats? Is it possible to accommodate?
 Each unit will be the a word and the whole bar is divided by the total number of words said. Each block will be the frequency and the width of each block will be the number of words
@@ -15,10 +15,31 @@ Each unit will be the a word and the whole bar is divided by the total number of
 var request = require('request');
 var fs = require('fs');
 var LineByLineReader = require('line-by-line'); 
-var lr = new LineByLineReader('data/sample-unique.txt');
-// var lr = new LineByLineReader('data/Chat-Goof-170417b.txt');
 
-var mononymous_monsters = JSON.parse(fs.readFileSync('data/mononymous-monsters.json'));
+// // Development Log
+// var lr = new LineByLineReader('data/development-log.txt');
+// var output_path = 'output/dev.json';
+
+// // Goof
+// var lr = new LineByLineReader('data/Chat-Goof-170501a.txt');
+// var output_path = 'output/goof.json';
+
+// // Migu
+// var lr = new LineByLineReader('data/Chat-Migu-170503a.txt');
+// var output_path = 'output/migu.json';
+
+// Applied
+var lr = new LineByLineReader('data/Chat-Applied-170303a.txt');
+var output_path = 'output/applied.json';
+
+// // Vinlock
+// var lr = new LineByLineReader('data/Chat-Vinlock-170418a.txt');
+// var output_path = 'output/vinlock.json';
+
+
+
+var mononymous_monsters = JSON.parse(fs.readFileSync('lists/single-name-monsters.json'));
+
 var item_api_url = 'http://api.notaion.com/?item&id=';
 var num_items = 0;
 var num_items_processed = 0;
@@ -39,12 +60,13 @@ lr.on('line', function (line) {
     // Setting all attributes to false first and
     // switch them to true as we go down the rule list
 
-    entry.raw = line.trim();
+    entry.raw = line.trim().replace('�', ' ').replace('�', '').replace('�', '').replace('�', '');
     entry.time = convert_time(entry.raw);
     entry.logged_in = false;
     entry.region = false;
     entry.hours_played = false;
 
+    console.log(entry.raw);
     // Group
     // 2017.04.01 00:40:19 : Your request has been registered on the Recruit Group Member List. 
     // 2017.04.06 22:15:05 : You have joined the group. 
@@ -53,20 +75,25 @@ lr.on('line', function (line) {
     // 2017.04.01 00:24:32 : You left the group. 
     // 2017.04.05 21:26:03 : Your Find Group request was removed because your Group or Alliance is full. 
     // 2017.04.05 22:34:30 : You have applied to join Fhenix's group. 
-
+    
+    entry.joined_group = false;    
+    entry.joined_your_group = false;
+    
     // Alliance
-    // 17.04.04 23:40:48 : You have joined the alliance. 
     // 2017.04.04 23:40:48 : You have joined the alliance. 
     // 2017.04.04 23:40:48 : AOEhoar has joined the alliance. 
 
-    // League
+    entry.joined_alliance = false;
+    entry.joined_your_alliance = false;
+
+    // League / Drop this - alliance is enough
     // 2017.04.03 21:13:02 : MissBard's Alliance has joined the League. 
     // 2017.04.04 20:56:33 : Otannii's Alliance has joined the League. 
     // 2017.04.04 20:57:17 : BadPing's Alliance has joined the League. 
     // 2017.04.04 20:58:56 : DDakCong's Alliance has joined the League. 
     // 2017.04.04 23:41:29 : 's Alliance has joined the League. (this one is fishy)
-
-    // Crafting
+    
+    // Crafting / Drop this
     // 2017.04.05 12:42:04 : You have crafted successfully. 
     // 2017.04.05 12:42:08 : Crafting of [item:152012669;ver8;;;;] was completed. 
     // 2017.04.05 12:42:08 : You have crafted successfully. 
@@ -74,13 +101,6 @@ lr.on('line', function (line) {
     // 2017.04.05 12:42:13 : You have crafted successfully. 
     // 2017.04.05 12:42:17 : Crafting of [item:152012669;ver8;;;;] was completed. 
     // 2017.04.05 12:42:17 : You have crafted successfully. 
-    // 2017.04.05 12:45:16 : You have crafted successfully. 
-    // 2017.04.05 12:45:20 : You have crafted successfully. 
-    // 2017.04.05 12:45:24 : You have crafted successfully. 
-    // 2017.04.05 12:45:28 : You have crafted successfully. 
-
-    entry.joined_group = true;
-    entry.joined_group = 
 
     entry.friend_logged_in = false;
     entry.friend_logged_out = false;
@@ -99,10 +119,13 @@ lr.on('line', function (line) {
     
     entry.item_sold_broker = false;
     entry.item_sold_npc = false;
-    entry.item_acquired = false;
+    entry.item_acquired = false; // from API
     entry.item_id = false;   
-    entry.item_quantity = false;
-    
+    entry.item_quantity = false;    
+    entry.item_desc = false; // from API
+    entry.item_type = false; // from API
+    entry.item_quality = false; // from API
+
     entry.enchant_item = false;
     entry.enchant_increase = false;
     
@@ -125,6 +148,10 @@ lr.on('line', function (line) {
     entry.damage_source = false;
     entry.damage_source_npc = false;
     entry.damage_source_player = false;
+
+
+
+
     
     // ========
     //  Player
@@ -149,6 +176,43 @@ lr.on('line', function (line) {
         entry.hours_played = Number(line.split('for ')[1].split(' hour')[0].replace(/,/gi, ''));
     }
 
+    // ==============
+    //  Joined Group
+    // ==============
+
+    // Joined Someone Else's Group
+    // 2017.04.06 22:15:05 : You have joined the group. 
+
+    if (line.indexOf(' : You have joined the group') >= 0) {
+        entry.joined_group = true;
+    }
+
+    // Joined Player's Group
+    // 2017.04.06 22:17:20 : Xanxvs-SL has joined your group. 
+    // 2017.04.13 23:20:57 : Applied has joined your group. 
+
+    if (line.indexOf(' has joined your group') >= 0) {
+        entry.joined_your_group = check_suffix(line.split(' : ')[1].split(' has joined')[0]);
+    }
+
+    // =================
+    //  Joined Alliance
+    // =================
+
+    // Joined Someone Else's Alliance
+    // 2017.04.04 23:40:48 : You have joined the alliance. 
+
+    if (line.indexOf(' : You have joined the alliance') >= 0) {
+        entry.joined_alliance = true;
+    }
+
+    // Joined Your Alliance
+    // 2017.04.04 23:40:48 : AOEhoar has joined the alliance.     
+
+    if (line.indexOf(' has joined the alliance') >= 0) {
+        entry.joined_your_alliance = check_suffix(line.split(' : ')[1].split(' has')[0]);
+    }
+
     // =========
     //  Friends
     // =========
@@ -158,20 +222,7 @@ lr.on('line', function (line) {
     // 2017.04.04 22:26:52 : AOEhoar has logged in. 
 
     if (line.indexOf('has logged in') >= 0) {
-
-        // check if name has server suffix
-        if (line.indexOf('-') >= 0) {
-
-            // if there is, assign attribute this way (suffix removed)
-            entry.friend_logged_in = line.split(' : ')[1].split(' has')[0].split('-')[0];    
-        }
-
-        // if not
-        else {
-
-            // assign attribute this way
-            entry.friend_logged_in = line.split(' : ')[1].split(' has')[0];
-        }
+        entry.friend_logged_in = check_suffix(line.split(' : ')[1].split(' has')[0]);
     }
 
     // Friend Logged Out
@@ -179,20 +230,7 @@ lr.on('line', function (line) {
     // 2017.04.04 23:46:50 : Visvasan has logged out. 
 
     if (line.indexOf('has logged out') >= 0) {
-
-        // check if name has server suffix
-        if (line.indexOf('-') >= 0) {
-
-            // if there is, assign attribute this way
-            entry.friend_logged_out = line.split(' : ')[1].split(' has')[0].split('-')[0];
-        }
-
-        // if not
-        else {
-
-            // assign attribute this way
-            entry.friend_logged_out = line.split(' : ')[1].split(' has')[0];
-        }
+        entry.friend_logged_out = check_suffix(line.split(' : ')[1].split(' has')[0]);
     }
 
     // ==========
@@ -205,8 +243,8 @@ lr.on('line', function (line) {
     if (line.indexOf('] Whispers:') >= 0) {
 
         // assign name
-        entry.whisper_from = line.split('charname:')[1].split(';')[0];
-        entry.whisper_length = line.split(' ').length;
+        entry.whisper_from = check_suffix(line.split('charname:')[1].split(';')[0]);
+        entry.whisper_length = line.split('] Whispers: ')[1].split(' ').length;
 
         // ommit chat content from raw string
         // entry.raw = entry.raw.split('] Whispers: ')[0] + '] Whispers:';
@@ -218,10 +256,11 @@ lr.on('line', function (line) {
     if (line.indexOf('You Whisper to') >= 0) {
 
         // assign name
-        entry.whisper_to = line.split('charname:')[1].split(';')[0];
+        entry.whisper_to = check_suffix(line.split('charname:')[1].split(';')[0]);
+        entry.whisper_length = line.split(']: ')[1].split(' ').length;
 
         // ommit chat content from raw string
-        entry.raw = entry.raw.split(']: ')[0] + ']:';
+        // entry.raw = entry.raw.split(']: ')[0] + ']:';
     }   
 
     // =========
@@ -233,6 +272,11 @@ lr.on('line', function (line) {
     
     if (line.indexOf('You have earned') >= 0 && line.indexOf('Kinah') >= 0) {
         entry.money_earned = Number(line.split('earned ')[1].split(' Kinah')[0].replace(/,/gi, ''));
+
+        // // special case
+        // if (entry.money_earned > 1000000000) {
+        //     entry.money_earned = entry.money_earned / 1000;
+        // }
     }
     
     // Money Spent
@@ -240,6 +284,11 @@ lr.on('line', function (line) {
     
     if (line.indexOf('You spent') >= 0 && line.indexOf('Kinah') >= 0) {
         entry.money_spent = Number(line.split('spent ')[1].split(' Kinah')[0].replace(/,/gi, ''));
+        
+        // // special case
+        // if (entry.money_spent > 1000000000) {
+        //     entry.money_spent = entry.money_spent / 1000;
+        // }
     }
     
     // =======
@@ -406,12 +455,39 @@ lr.on('line', function (line) {
     // ==================
 
     // You Inflicted Damage On
-    // 2017.03.31 22:36:37 : You inflicted 113 damage on Crowley-SL.    
-    
+    // 2017.03.31 22:36:37 : You inflicted 113 damage on Crowley-SL.        
+    // 2017.03.31 22:36:37 : Critical Hit! You inflicted 1,136 critical damage on Crowley-SL. (this is probably from an auto-attack)
+
     if (line.indexOf('You inflicted') >= 0) {
 
-        // assign damage first
-        entry.damage_inflicted = Number(line.split('inflicted ')[1].split(' damage')[0].replace(/,/gi, ''));
+        // assign damage, but check if it's critical damage first
+        if (line.indexOf('Critical Hit!') >= 0) {
+
+            // set critical damage to true
+            entry.damage_critical = true;
+
+            // check if it says "critical damage on" or just "damage on"
+            // 2017.03.31 22:36:37 : Critical Hit! You inflicted 1,136 critical damage on Crowley-SL.
+
+            if (line.indexOf('critical damage on') >= 0) {
+
+                // if true assign damage this way
+                entry.damage_inflicted = Number(line.split('inflicted ')[1].split(' critical damage')[0].replace(/,/gi, ''));
+            } 
+
+            // if not
+            else {
+
+                // assign damage this way
+                entry.damage_inflicted = Number(line.split('inflicted ')[1].split(' damage on')[0].replace(/,/gi, ''));   
+            }
+
+        }
+
+        // if not critcal damage, assign damage normally
+        else {
+            entry.damage_inflicted = Number(line.split('inflicted ')[1].split(' damage on')[0].replace(/,/gi, ''));  
+        }
 
         // if skill exists
         // 2017.03.31 22:35:06 : You inflicted 1,075 damage on LindWanijima-SL by using Wrathful Explosion.  
@@ -422,28 +498,24 @@ lr.on('line', function (line) {
             entry.damage_skill = line.split('using ')[1].split('.')[0].trim();
             
             // assign target attribute based on raw string with skill
-            entry.damage_target = line.split(' on ')[1].split(' by')[0].trim();
+            entry.damage_target = check_suffix(line.split(' on ')[1].split(' by')[0].trim());
         } 
 
         // if skill doesn't exist
         else {
             // assign target as per normal
-            entry.damage_target = line.split('damage on ')[1].split('.')[0].trim();
-        }
-
-        // critical hit
-        if (line.indexOf('Critical Hit!') >= 0) {
-            entry.damage_critical = true;
+            entry.damage_target = check_suffix(line.split('damage on ')[1].split('.')[0].trim());
         }
     }
     
     // Check if Target is a Monster
     // 2017.03.31 23:49:23 : You inflicted 2,005 damage on Primeval Mookie by using Tumultuos Surge.
+    // 2017.04.01 00:16:46 : Critical Hit!You inflicted 4,121 damage on Primeval Mookie by using Tumultuos Surge.
 
     // check if target exists
     if (entry.damage_target != false) {
 
-        // if it exists, check if it's nam has more than one-word
+        // if it exists, check if its name has more than one-word
         if (entry.damage_target.split(' ').length > 1) {
 
             // if so, it's a monster
@@ -497,12 +569,12 @@ lr.on('line', function (line) {
         
         // if hit is critical, assign source this way
         if (line.indexOf('Critical Hit') >= 0) {
-           entry.damage_source = line.split('Hit!')[1].split(' has')[0];
+           entry.damage_source = check_suffix(line.split('Hit!')[1].split(' has')[0]);
         } 
 
         // if not critical, assign source this way
         else {
-           entry.damage_source = line.split(' : ')[1].split(' has')[0];
+           entry.damage_source = check_suffix(line.split(' : ')[1].split(' has')[0]);
         }
 
         // critical hit
@@ -599,6 +671,7 @@ lr.on('line', function (line) {
     //     entry.damage_critical = true;
     // }
 
+
     // ===================
     //  Filtering Results
     // ===================
@@ -617,9 +690,86 @@ lr.on('line', function (line) {
     }
 });
 
+// ======================
+//  Once Parsing is Done
+// ======================
+
 lr.on('end', function () {
+
+    // get item using using Not Aion API
+
+    console.log('========================================'); 
+    console.log(' Getting item details from Not Aion API');    
+    console.log('========================================');    
     get_item_names();
+    
+    // // use this while in doing testing
+    // console.log('Writing output to JSON');     
+    // fs.writeFileSync(output_path, JSON.stringify(log));  
+    // console.log('Writing complete: ' + output_path);    
 });
+
+// =================================
+//  Get Item Names from NotAion API
+// =================================
+
+function get_item_names() {
+    var counter = 1;
+    for (var i in log) {
+        if (log[i].item_id != false) {            
+            setTimeout(item_api, 500 * counter, i, log[i].item_id, log[i].raw);
+            counter++;
+        }
+    }
+}
+
+// Function to Get Item Name Using NotAion's API
+// This runs after the line-by-line operation is complete
+// and then writes the final result of the whole thing to a JSON
+function item_api(index, item_id, raw) {
+
+    // send request to NotAion API
+    request(item_api_url + item_id, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            
+            // get item attributes
+            var item = JSON.parse(body).item[0];      
+            
+            // assign item name
+            log[index].item_acquired = item['name'];
+            log[index].item_desc = item['desc'];
+            log[index].item_quality = item['quality'];
+            log[index].item_type = item['type'];
+
+            console.log('[ index: ' + index + ' ]');
+            console.log('raw: ' + raw)
+            console.log('item id: ' + item_id);
+            console.log('item name: ' + item['name']);
+            console.log('item quality: ' + item['quality']);
+            console.log('item type: ' + item['type']);
+            console.log('');            
+
+
+            // update # processed
+            num_items_processed++;
+
+            // once all items have been their names, export it to a JSON file
+            if (num_items_processed == num_items) {  
+
+                // specify directory and file name
+                console.log('Writing output to JSON');                
+                fs.writeFileSync(output_path, JSON.stringify(log));
+                console.log('Writing complete: ' + output_path);
+            }
+        } else {
+            console.error('request failed', index, item_id, raw);
+        }
+    });
+}
+
+// =======================================
+//  Check Monsters with Single-Word Names
+// =======================================
 
 function check_mononymous(name) {
     var result = false;
@@ -639,36 +789,11 @@ function convert_time(raw) {
     return final;
 }
 
-function get_item_names() {
-    var counter = 1;
-    for (var i in log) {
-        if (log[i].item_id != false) {            
-            setTimeout(item_api, 500 * counter, i, log[i].item_id, log[i].raw);
-            counter++;
-        }
+function check_suffix(name) {
+
+    if (name.indexOf('-SL') >= 0 || name.indexOf('-BR') >= 0 || name.indexOf('-TM') >= 0 || name.indexOf('-IS') >= 0) {
+        return name.split('-')[0];
+    } else {
+        return name;
     }
-}
-
-// Function to Get Item Name Using NotAion's API
-// This runs after the line-by-line operation is complete
-// and then 
-function item_api(index, item_id, raw) {
-    request(item_api_url + item_id, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            
-            var item = JSON.parse(body).item[0];
-            console.log(index, item_id, raw);            
-            log[index].item_acquired = item['name'];
-            num_items_processed++;
-
-            // once all items have been their names, export it to a JSON file
-            if (num_items_processed == num_items) {
-                
-                console.log('Writing results to JSON');
-                fs.writeFileSync('output/sample-log.json', JSON.stringify(log));
-            }
-        } else {
-            console.error('request failed', index, item_id, raw);
-        }
-    });
 }
