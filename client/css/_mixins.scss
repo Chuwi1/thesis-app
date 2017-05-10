@@ -1,12 +1,14 @@
 @mixin headline-style {
     font-family: $default-font;
     font-size: 2em;
-    font-weight: bold;
+    line-height: 1.2em;
+    font-weight: 600;
 }
 
 @mixin header-columns {
     float: left;
-    width: 50%;
+    // width: 50%;
+    width: 65%;
 }
 
 @mixin section-title-style {

@@ -1,30 +1,50 @@
-var total_amount_spent = 0;
-var total_amount_earned = 0;
-var highest_amount = 0;
+// Global Variables
+var bar_height = '30px';
+var days = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
+var player_names = ['Player 1', 'Player 2', 'Player 3'];
 
-var earned_list = [];
-var spent_list = [];
-
-// $('.section').click(togglePanel);
-// function togglePanel(event) {
-//     if (event.currentTarget.getAttribute("collasped") == 'true') {
-//         TweenLite.to(event.currentTarget, 0.3, { height: 200, ease: Power4.easeOut, background:'darkgray' });
-//         event.currentTarget.setAttribute("collasped", false);
-//     } else {
-//         TweenLite.to(event.currentTarget, 0.3, { height: 120, ease: Power4.easeOut, background: 'lightgray' });
-//         event.currentTarget.setAttribute("collasped", true);
-//     }
-// }
-
-$('button').click(test_this_bullshit);
-
-function test_this_bullshit() {
-    d3.select('#main')
-        .selectAll('*')
-        .remove();
-        
+// delayer
+function get_delay(i) {
+    var delay_multiplier = 2;
+    var delay_start = 500;
+    return delay_start + (i * delay_multiplier);
 }
 
+var cur_section = 'bar';
+
+function bar() {
+    if (cur_section != 'bar') {
+        clear();
+        money();
+        messages();
+        damage();
+        cur_section = 'bar';
+    }
+    
+}
+
+function week() {
+    
+    if (cur_section != 'week') {
+        clear();
+        money_dates();
+        messages_dates();
+        damage_dates();
+        cur_section = 'week';
+    }
+    
+}
+
+function clear() {
+    d3.selectAll('*').interrupt();
+    d3.selectAll('*').transition();
+    d3.select('#main').selectAll('*').remove();
+    d3.select('#money').selectAll('*').remove();    
+    $('#main').empty();
+    $('#money').empty();
+    $('#main .div').empty();
+    $('#main .div').remove();
+}
 
 function tooltips() {
     new Tippy('.tippy', {
@@ -36,227 +56,208 @@ function tooltips() {
         arrow: true
     });
 }
-    
-// function load() {
 
-//     $.get('/query', function(data) {
-
-//         // Remember to create a checker to check everyone's $$ to see which is the highest
-
-//         // aggregate money earned
-//         for (var i = 0; i < data.length; i++) {
-//             if (data[i].money_earned != false) {
-//                 total_amount_earned += data[i].money_earned;
-//                 earned_list.push(data[i].money_earned);
-//             }
-//         }
-        
-//         // aggregate money spent
-//         for (var i = 0; i < data.length; i++) {
-//             if (data[i].money_spent != false) {
-//                 total_amount_spent += data[i].money_spent;
-//                 spent_list.push(data[i].money_spent);                
-//             }
-//         }
-        
-//         // check if earn more than spend / assign highest amount
-//         if (total_amount_earned > total_amount_spent) {
-//             highest_amount = total_amount_earned;
-//         } else {
-//             highest_amount = total_amount_spent;
-//         }
-
-//         var earned_scale = d3.scaleLinear()
-//             .domain([0, highest_amount])
-//             // .range([1, 960 - earned_list.length]);
-//             .range([1, 960 - (earned_list.length * 2) + 1]);
-        
-//         var spent_scale = d3.scaleLinear()
-//             .domain([0, highest_amount])
-//             // .range([1, 960 - spent_list.length]);            
-//             .range([1, 960 - (spent_list.length * 2) + 1]);    
-            
-//         // console.log(spent_list)
-        
-//         // var color_shit = d3.scaleLinear()
-//         //     .domain(0, highest_amount)
-//         //     .range(['yellow', 'blue']);
-        
-//         d3.select('#finance')
-//             .append('div')
-//             .html('Player 01');
-        
-//         d3.select('#finance')
-//             .append('div')
-//             .html('Money Earned: ' + total_amount_earned.toLocaleString() + ' Kinah');
-        
-//         d3.select('#finance')
-//             .append('div')
-//             .attr('class', 'earned-graph');
-        
-//         d3.select('#finance .earned-graph')
-//             .selectAll('div')
-//             .data(earned_list)
-//             .enter()
-//             .append('div')
-//                 .attr('class', 'tippy')
-//                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
-//                 .attr('hover-color', 'indianred')
-//                 // .style('margin-top', '10px')   
-//                 .style('margin-left', '1px')
-//                 .style('float', 'left')
-//                 .style('background-color', 'indianred')
-//                 .style('height', '30px')
-//                 .style('width', function(d) { return earned_scale(d) + 'px' })
-//                 .on('mouseover', mouse_over)
-//                 .on('mouseout', mouse_out);
-                
-//         d3.select('#finance')
-//             .append('div')
-//                 .style('clear', 'left')
-//                 .attr('display', 'block')
-//                 .html('Money spent: ' + total_amount_spent.toLocaleString() + ' Kinah');
-        
-//         d3.select('#finance')
-//             .append('div')
-//                 .attr('class', 'spent-graph')
-//                 .style('width', '960px');
-            
-//         d3.select('#finance .spent-graph')
-//             .selectAll('div')
-//             .data(spent_list)
-//             .enter()
-//             .append('div')
-//                 .attr('class', 'tippy')
-//                 .attr('title', function(d) { return d.toLocaleString() + ' Kinah' })
-//                 .attr('hover-color', 'olive')                
-//                 // .style('margin-top', '10px')   
-//                 .style('margin-left', '1px')
-//                 .style('float', 'left')
-//                 .style('background-color', 'olive')
-//                 .style('height', '30px')
-//                 .style('width', function(d) { return spent_scale(d) + 'px' })
-//                 .on('mouseover', mouse_over)
-//                 .on('mouseout', mouse_out);   
-        
-//         tooltips();
-//     });
-// }
+function circletips() {
+    new Tippy('svg circle', {
+        theme: 'aion',
+        position: 'top',
+        animation: 'fade',
+        duration: 0,
+        arrowSize: 'small',
+        arrow: true
+    });
+}
 
 function mouse_over() {
     var color = d3.color(d3.select(this).attr('hover-color')).darker(2);
     d3.select(this)
         .transition()
-        .duration(400)
-        .style('background', color);
+        .duration(0)
+        .style('background', color)
+        .style('fill', color);
 }
 
 function mouse_out() {
     var color = d3.color(d3.select(this).attr('hover-color'));
     d3.select(this)
         .transition()
-        .duration(400)
-        .style('background', color);
+        .duration(0)
+        .style('background', color)
+        .style('fill', color);
 }
 
-// load();
+// =======
+//  Money 
+// =======
 
-// var circleRadii = [40, 20, 10]
-
-// var svgContainer = d3.select("body").append("svg")
-//                                  .attr("width", 600)
-//                                  .attr("height", 100);
-
-// var circles = svgContainer.selectAll("circle")
-//                         .data(circleRadii)
-//                         .enter()
-//                         .append("circle")
-//                         .style('fill', 'black')
-//                         .attr('r', 100)
-//                         .attr('cx', function (d) { return d * 10; })
-//                         .attr('cy', 0);
-
-
-
-communication();
-finance();
-damage();
-
-// ========
-//  Damage
-// ========
-
-function damage() {
+function money() {
     
-    $.get('/damage', function(players){
-       
+    // colour codings
+    var c_scheme = ['#00796B', '#00796B'];
+    
+    // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'money')
+        .append('div')
+            .attr('class', 'section title')
+            .html('In-Game Money');
+    
+    $.get('/money', function(players) {
         
+        // multi-dimensional array containing max earned and spent for each player
+        var totals = [];
         
+        // holder for max value
+        var max = 0;
+        
+        // aggregate transactions        
+        for (var i = 0; i < players.length; i++) {
+            totals.push([
+                sum(players[i], 'money_earned'),
+                sum(players[i], 'money_spent')
+            ]);
+        }
+
+        // assign highest value - for use on scaleLinear
+        max = get_max(totals);
+        
+        // loop to populate visualisation
+        for (var i = 0; i < players.length; i++) {
+            
+            var id = String('.p' + (i + 1));
+            
+            var earnings = [];
+            var spendings = [];
+            
+            // push spent and earned variables to each array (what about timescale?)
+            for (var k = 0; k < players[i].length; k++) {
+                players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
+            }
+            
+            // set scales
+            var earnings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960]);
+                .range([1, 960 - (earnings.length * 2) + 1]);
+    
+            var spendings_scale = d3.scaleLinear()
+                .domain([0, max])
+                // .range([1, 960]);
+                .range([1, 960 - (spendings.length * 2) + 1]);        
+            
+            // append visualisation
+            d3.select('#money')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+            
+            // earnings
+            d3.select('#money ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor earnings')
+                    .html('Earned ' + delimit(totals[i][0]) + ' Kinah' + ' (' + rmt(totals[i][0]) + ')');
+    
+            d3.select('#money ' + id)
+                .append('div')
+                    .attr('class', 'graph earnings')
+                .selectAll('div')
+                    .data(earnings)
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('hover-color', c_scheme[0])
+                    .style('background-color', c_scheme[0])
+                    .style('opacity', 1)                     
+                    .style('height', '0px')
+                    // .style('width', '0px')
+                    .style('width', function(d) { return earnings_scale(d) + 'px' } )                        
+                    .on('mouseover', mouse_over)
+                    .on('mouseout', mouse_out)
+                .transition()
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    // .style('width', function(d) { return earnings_scale(d) + 'px' } )                       
+                    .style('opacity', 1);
+            
+
+            // spendings
+            d3.select('#money ' + id)
+                .append('div')
+                .attr('class', 'graph-descriptor spendings')
+                .html('Spent: ' + delimit(totals[i][1]) + ' Kinah' + ' (' + rmt(totals[i][1]) + ')');
+    
+            d3.select('#money ' + id)
+                .append('div')
+                    .attr('class', 'graph spendings')  
+                .selectAll('div')
+                    .data(spendings)
+                    .enter()
+                .append('div')
+                    .attr('class', 'unit tippy')
+                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('hover-color', c_scheme[1])
+                    .style('background-color', c_scheme[1])
+                    .style('opacity', 1)        
+                    .style('height', '0px')
+                    .style('width', function(d) { return spendings_scale(d) + 'px' } )                    
+                    .on('mouseover', mouse_over)
+                    .on('mouseout', mouse_out)
+                .transition()
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    .style('opacity', 1);
+            
+            // console.log(earnings.length);
+            // report
+            d3.select('#money ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    // .style('background-color', 'black')
+                    // .style('height', '100px')
+                    .html(player_names[i] + ' earned ' + rmt(totals[i][0]) + ' and spent ' + rmt(totals[i][1]) + ' worth of in-game money based on Real Money Trading (RMT) exchange rates.');         
+                    
+            d3.selectAll('.graph.earnings')
+                .style('width', '0px')
+                .transition()
+                    .duration(750)
+                    .delay(0)
+                    .style('width', '960px');
+            
+            d3.selectAll('.graph.spendings')
+                .style('width', '0px')
+                .transition()
+                    .duration(750)
+                    .delay(0)
+                    .style('width', '960px');        
+                    
+        }
+
+        tooltips();    
     });
 }
 
-// ========
-//  Damage
-// ========
-// Save this as an example to show Daniel
 
-// function damage() {
+// ==========
+//  Messages
+// ==========
+
+function messages() {
+
+   // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'messages')
+        .append('div')
+            .attr('class', 'section title')
+            .html('Private Messages');
     
-//     $.get('/damage', function(players) {
-        
-//         var test = [100, 200, 100, 300];
-        
-//         var id = String('.p1');
-        
-//         var c_scheme = ['#0D47A1', '#0D47A1'];
-        
-//         // append visualisation
-//         d3.select('#damage')
-//         .append('div')
-//             .attr('class', id.replace('.', ''))
-//         .append('div')
-//             .attr('class', 'player-name')
-//             .html('Player 1');
-        
-//         // damages
-//         d3.select('#damage ' + id)
-//         .append('div')
-//             .attr('class', 'graph-descriptor')
-//             .html('Title');
-        
-//         // append the graph
-//         d3.select('#damage ' + id)
-//             .append('svg')
-//                 .attr('class', '')
-//                 .attr('width', 960)
-//                 .attr('height', 200)
-//             .selectAll('circle')
-//                 .data(players)
-//                 .enter()
-//             .append('circle')
-//                 .attr('r', function(d) { return 0; })
-//                 .attr('cx', function(d, i) { return i / players.length * 960; })
-//                 .attr('cy', 100)
-//                 .style('stroke', 'gray')
-//                 .style('stroke-width', 0.1)                
-//                 // .style('opacity', 0.1)
-//                 .style('fill', 'none')
-                
-//                 .transition()
-//                     .duration(200)
-//                     .delay(function (d, i) { return i * 0.2 })
-//                     .attr('r', function(d) { return d / 400; });  
-//         tooltips();         
-//     });
-// }
-
-// ===============
-//  Communication
-// ===============
-
-function communication() {
-    
-    $.get('/chat', function(players) {
+    $.get('/messages', function(players) {
 
         // Player 1
         // whisper_tos[0] = [friend, total_words]
@@ -342,7 +343,7 @@ function communication() {
                 .range([1, 960 - (whisper_froms[i].length * 2) + 1]);  
 
             // append visualisation
-            d3.select('#communication')
+            d3.select('#messages')
                 .append('div')
                     .attr('class', id.replace('.', ''))
                 .append('div')
@@ -350,14 +351,14 @@ function communication() {
                     .html('Player ' + (i + 1));
 
            // whisper tos
-            d3.select('#communication ' + id)
+            d3.select('#messages ' + id)
                 .append('div')
-                    .attr('class', 'graph-descriptor')
+                    .attr('class', 'graph-descriptor outgoing')
                     .html('Outgoing (' + sum(whisper_tos[i], 1) + ' words / ' + whisper_tos[i].length + ' players)');
            
-            d3.select('#communication ' + id)
+            d3.select('#messages ' + id)
                 .append('div')
-                    .attr('class', 'graph earnings')
+                    .attr('class', 'graph outgoing')
                 .selectAll('div')
                     .data(whisper_tos[i])
                     .enter()
@@ -365,20 +366,26 @@ function communication() {
                     .attr('class', 'unit tippy')
                     .attr('title', function(d) { return d[0] + ' (' + d[1] + ' words)' })
                     .attr('hover-color', c_scheme[0])
+                    .style('height', '0px')                    
                     .style('background-color', c_scheme[0])
                     .style('width', function(d) { return tos_scale(d[1]) + 'px' })
                 .on('mouseover', mouse_over)
-                .on('mouseout', mouse_out);
+                .on('mouseout', mouse_out)
+                .transition()
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    .style('opacity', 1);
 
            // whisper froms
-            d3.select('#communication ' + id)
+            d3.select('#messages ' + id)
                 .append('div')
-                    .attr('class', 'graph-descriptor')
+                    .attr('class', 'graph-descriptor incoming')
                     .html('Incoming (' + sum(whisper_froms[i], 1) + ' words / ' + whisper_froms[i].length + ' players)');
            
-            d3.select('#communication ' + id)
+            d3.select('#messages ' + id)
                 .append('div')
-                    .attr('class', 'graph earnings')
+                    .attr('class', 'graph incoming')
                 .selectAll('div')
                     .data(whisper_froms[i])
                     .enter()
@@ -386,144 +393,733 @@ function communication() {
                     .attr('class', 'unit tippy')
                     .attr('title', function(d) { return d[0] + ' (' + d[1] + ' words)' })
                     .attr('hover-color', c_scheme[1])
+                    .style('height', '0px')                        
                     .style('background-color', c_scheme[1])
                     .style('width', function(d) { return froms_scale(d[1]) + 'px' })
                 .on('mouseover', mouse_over)
-                .on('mouseout', mouse_out);
+                .on('mouseout', mouse_out)
+                .transition()
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    .style('opacity', 1);
 
-
-            d3.select('#communication ' + id)
+            d3.select('#messages ' + id)
                 .append('div')
                     .attr('class', 'report')
-                    .html('Player ' + (i + 1) + ' spent a total of $0,000 across 0 transactions. An average of $0,000 a day. Highest amount spent is $0,000 . Lowest is $0,000 .');         }
+                    .html(player_names[i] + ' sent a total of ' + sum(whisper_tos[i], 1) + ' words to ' + whisper_tos[i].length + ' player characters, and received a total of ' + sum(whisper_froms[i], 1) + ' words from '+ whisper_froms[i].length + ' player characters.');         
+  
+             d3.selectAll('.graph.outgoing')
+                .style('width', '0px')
+                .transition()
+                    .duration(750)
+                    .delay(0)
+                    .style('width', '960px');
+            
+            d3.selectAll('.graph.incoming')
+                .style('width', '0px')
+                .transition()
+                    .duration(750)
+                    .delay(0)
+                    .style('width', '960px');    
+        }
         
         tooltips(); 
     });
 }
 
+// ======
+// Damage
+// ======
 
-// ===============
-//  Finance
-// ===============
+function damage() {
 
-function finance() {
+    // define variables
+    var c_scheme = ['#EF5350', '#EF5350'];
+    var dmg_inflicted = [];
+    var dmg_received = [];
+    var dmg_totals = [];
     
-    $.get('/finance', function(players) {
-        
-        // multi-dimensional array containing max earned and spent for each player
-        var totals = [];
-        
-        // colour codings
-        var c_scheme = ['#E57373', '#E57373'];
-        
-        // holder for max value
-        var max = 0;
-        
-        // aggregate transactions        
-        for (var i = 0; i < players.length; i++) {
-            totals.push([
-                sum(players[i], 'money_earned'),
-                sum(players[i], 'money_spent')
-            ]);
-        }
+    // holder for max value
+    var max = 0;
+    
+    var num_conns = 0;
+    var max_conns = 3;
+    
+    $.get('/dmg_inflicted', function(d) {
+        dmg_inflicted = d;
+        num_conns++;
+        if (num_conns == max_conns) populate();
+    });
+    
+    $.get('/dmg_received', function(d) {
+        dmg_received = d;
+        num_conns++;
+        if (num_conns == max_conns) populate();
+    });
+    
+    $.get('/dmg_totals', function(d) {
+        dmg_totals = d;
+        num_conns++;
+        if (num_conns == max_conns) populate();
+    });
+    
+    
+   // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'damage')
+        .append('div')
+            .attr('class', 'section title')
+            .html('Damage Statistics');
 
-        // assign highest value - for use on scaleLinear
-        max = get_max(totals);
+    function populate() {
+    
+        // set max value
+        for (var i = 0; i < dmg_totals.length; i++) {
+            if (max < dmg_totals[i].inflicted.total) {
+                max = dmg_totals[i].inflicted.total; 
+            }
+            if (max < dmg_totals[i].received.total) {
+                max = dmg_totals[i].received.total; 
+            }
+        }
         
-        // loop to populate visualisation
-        for (var i = 0; i < players.length; i++) {
-            
+        // console.log(dmg_inflicted);
+        // console.log(max);
+        
+        console.log(dmg_totals);
+
+        for (var i = 0; i < dmg_totals.length; i++) {
+                
+            // get player id
             var id = String('.p' + (i + 1));
-            
-            var earnings = [];
-            var spendings = [];
-            
-            // push spent and earned variables to each array (what about timescale?)
-            for (var k = 0; k < players[i].length; k++) {
-                players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
+                
+            var inflicted_graph_data = [];
+            var received_graph_data = [];
+        
+            // prepare graph data
+            for (var k = 0; k < dmg_inflicted[i].length; k++) {
+                inflicted_graph_data.push(dmg_inflicted[i][k].dmg);
             }
             
-            // define scales
-            var earnings_scale = d3.scaleLinear()
+            // prepare graph data
+            for (var k = 0; k < dmg_received[i].length; k++) {
+                received_graph_data.push(dmg_received[i][k].dmg);
+            }
+
+            // set scales
+            var inflicted_scale = d3.scaleLinear()
                 .domain([0, max])
-                // .range([1, 960 - earnings.length]);
-                .range([1, 960 - (earnings.length * 2) + 1]);
-    
-            var spendings_scale = d3.scaleLinear()
+                // .range([1, 960]);
+                .range([1, 960 - (inflicted_graph_data.length * 2) + 1]);
+
+            var received_scale = d3.scaleLinear()
                 .domain([0, max])
-                // .range([1, 960 - spendings.length]);
-                .range([1, 960 - (spendings.length * 2) + 1]);        
-            
-            // append visualisation
-            d3.select('#finance')
+                // .range([1, 960]);       
+                .range([1, 960 - (received_graph_data.length * 2) + 1]);            
+        
+            d3.select('#damage')
                 .append('div')
                     .attr('class', id.replace('.', ''))
                 .append('div')
                     .attr('class', 'player-name')
                     .html('Player ' + (i + 1));
+         
+            // inflicted
+            d3.select('#damage ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor inflicted')
+                    .html('Total Damage Inflicted: ' + delimit(dmg_totals[i].inflicted.total) + ' / Overall Crit Rate: ' + ((dmg_totals[i].inflicted.crits / dmg_totals[i].inflicted.count) * 100).toFixed(2) + '%');
             
-            // earnings
-            d3.select('#finance ' + id)
+            d3.select('#damage ' + id)
                 .append('div')
-                    .attr('class', 'graph-descriptor')
-                    .html('Earned ' + delimit(totals[i][0]) + ' Kinah' + ' (' + rmt(totals[i][0]) + ')');
-    
-            d3.select('#finance ' + id)
-                .append('div')
-                    .attr('class', 'graph earnings')
+                    .attr('class', 'graph inflicted')
                 .selectAll('div')
-                    .data(earnings)
+                    .data(inflicted_graph_data)
                     .enter()
                 .append('div')
                     .attr('class', 'unit tippy')
-                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('title', function(d, j) { 
+                        
+                        var inflicted = dmg_inflicted[i][j];
+                        
+                        if (inflicted._id == false) {
+                            var skill = 'Auto-Attack / Other'
+                        } else {
+                            var skill = inflicted._id;
+                        }
+                        
+                        var dmg = delimit(inflicted.dmg);
+                        var c_rate = ((inflicted.crits / inflicted.count) * 100).toFixed(2);
+                        var html = 
+                            skill + 
+                            '<br />' + 
+                            'Total Damage: ' + dmg + 
+                            '<br />' + 
+                            'Crit Rate: ' + c_rate + '%';
+                            
+                        return html;
+                        
+                    })
                     .attr('hover-color', c_scheme[0])
+                    .style('height', '0px')                      
                     .style('background-color', c_scheme[0])
-                    .style('opacity', 0)                     
-                    .style('width', function(d) { return earnings_scale(d) + 'px' } )
-                    .on('mouseover', mouse_over)
-                    .on('mouseout', mouse_out)
+                    .style('opacity', 1)                     
+                    .style('width', function(d) { return inflicted_scale(d) + 'px' } )                        
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out)
                 .transition()
-                    .duration(50)
-                    .delay(function (d, i) { return i * 10 })
-                    .style('opacity', 1);   
-                    
-            // spendings
-            d3.select('#finance ' + id)
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    .style('opacity', 1);                
+            
+            // received
+            d3.select('#damage ' + id)
                 .append('div')
-                .attr('class', 'graph-descriptor')
-                .html('Spent: ' + delimit(totals[i][1]) + ' Kinah' + ' (' + rmt(totals[i][1]) + ')');
-    
-            d3.select('#finance ' + id)
+                    .attr('class', 'graph-descriptor received')
+                    .html('Total Damage Received: ' + delimit(dmg_totals[i].received.total) + ' / Overall Crit Rate: ' + ((dmg_totals[i].received.crits / dmg_totals[i].received.count) * 100).toFixed(2) + '%');
+            
+            d3.select('#damage ' + id)
                 .append('div')
-                    .attr('class', 'graph spendings')
+                    .attr('class', 'graph received')
                 .selectAll('div')
-                    .data(spendings)
+                    .data(received_graph_data)
                     .enter()
                 .append('div')
                     .attr('class', 'unit tippy')
-                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
-                    .attr('hover-color', c_scheme[1])
-                    .style('background-color', c_scheme[1])
-                    .style('opacity', 0)                    
-                    .style('width', function(d) { return spendings_scale(d) + 'px' })
-                    .on('mouseover', mouse_over)
-                    .on('mouseout', mouse_out)
+                    .attr('title', function(d, j) { 
+                        
+                        var received = dmg_received[i][j];
+                        
+                        if (received._id == false) {
+                            var skill = 'Auto-Attack / Other'
+                        } else {
+                            var skill = received._id;
+                        }
+                        
+                        var dmg = delimit(received.dmg);
+                        var c_rate = ((received.crits / received.count) * 100).toFixed(2);
+                        var html = 
+                            skill + 
+                            '<br />' + 
+                            'Total Damage: ' + dmg + 
+                            '<br />' + 
+                            'Crit Rate: ' + c_rate + '%';
+                            
+                        return html;
+                        
+                    })
+                    .attr('hover-color', c_scheme[0])
+                    .style('height', '0px')                      
+                    .style('background-color', c_scheme[0])
+                    .style('opacity', 1)                     
+                    .style('width', function(d) { return inflicted_scale(d) + 'px' } )                        
+                .on('mouseover', mouse_over)
+                .on('mouseout', mouse_out)
                 .transition()
-                    .duration(50)
-                    .delay(function (d, i) { return i * 10 })
-                    .style('opacity', 1);
-            
-            d3.select('#finance ' + id)
+                    .duration(function (d, i) { return i * 0.5 })
+                    .delay(function (d, i) { return (i * 5) + 750 })
+                    .style('height', bar_height)
+                    .style('opacity', 1);                
+
+            d3.select('#damage ' + id)
                 .append('div')
                     .attr('class', 'report')
-                    .html('Player spent a total of $0,000 across 0 transactions. An average of $0,000 a day. Highest amount spent is $0,000 . Lowest is $0,000 .');                    
-        }
+                    .html(
+                        player_names[i] + ' inflicted a total of ' 
+                        + delimit(dmg_totals[i].inflicted.total) + 
+                    ' damage, with a critical hit rate of ' 
+                    + ((dmg_totals[i].inflicted.crits / dmg_totals[i].inflicted.count) * 100).toFixed(2) + '%' +
+                    ', and received a total of ' + delimit(dmg_totals[i].received.total) + ' damage, a critical hit rate of ' 
+                    + ((dmg_totals[i].received.crits / dmg_totals[i].received.count) * 100).toFixed(2) + '%'
+                    );                      
+        } // end loop
+        
+        tooltips();
+    } // end populate
 
-        tooltips();    
+} // end dmg
+
+// ===========
+// Money Dates
+// ==========
+
+function money_dates() {
+    
+    var c_scheme = ['#00897B', '#00897B'];
+    
+   // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'money-dates')
+        .append('div')
+            .attr('class', 'section title')
+            .html('In-Game Money by Days of the Week');
+        
+    $.get('/money_dates', function(d) {
+        
+        var max = 0;
+        
+        for (var i = 0; i < d.length; i++) {
+            if (max < d[i].earned_highest) max = d[i].earned_highest;
+            if (max < d[i].spent_highest) max = d[i].spent_highest;
+        }
+        
+        // set scale to highest value
+        var scale = d3.scaleLinear()
+            .domain([0, data_radius(max)])
+            .range([0, 50]);
+ 
+         for (var i = 0; i < d.length; i++) {
+            
+            // set player id
+            var id = String('.p' + (i + 1));
+            
+            // Player Name
+             d3.select('#money-dates')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+           
+            
+            var div = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0);
+                    
+            // ========
+            // Earnings
+            // ========
+            d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Overall Earnings');
+            
+            // Circles          
+            d3.select('#money-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].earnings)
+                .enter()
+                .append("circle")
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('title', function (d) { return delimit(d) + ' Kinah' })
+                    .attr('hover-color', c_scheme[0])    
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)           
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+            
+            // Days of the week
+            d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'week earnings')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week earnings')
+                    .style('float', 'left')
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });
+            
+            // report
+             d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has earned a total of ' + delimit(d[i].earned_total) + ' Kinah, and earns the most on ' + days[d[i].day_earned_most] + '.');
+                    
+                    // .html(
+                    //     'Total earnings: ' + delimit(d[i].earned_total) + ' Kinah / ' + rmt(d[i].earned_total)
+                    //     + '<br />' +
+                    //     'Earns most on: ' + days[d[i].day_earned_most] + ', ' + delimit(d[i].earned_highest) + ' Kinah / ' + rmt(d[i].earned_highest) 
+                    //     + '<br />' +
+                    //     'Number of transactions: ' + delimit(d[i].earned_total_transactions)
+                    // );                    
+            
+            // ========
+            // spendings
+            // ========
+            d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Overall Spendings');
+            
+            // Circles          
+            d3.select('#money-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].spendings)
+                .enter()
+                .append("circle")
+                    .attr('title', function (d) { return delimit(d) + ' Kinah' })
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('hover-color', c_scheme[0])                  
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)                
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+            
+            // Days of the week
+            d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'week spendings')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week spendings')
+                    .style('float', 'left')
+                    // .style('border-left', '1px solid gray')
+                    // .style('border-right', '1px solid gray')                    
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });           
+
+            // report
+             d3.select('#money-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has spent a total of ' + delimit(d[i].spent_total) + ' Kinah, and spends the most on ' + days[d[i].day_spent_most] + '.');
+
+                    
+        } // end for loop
+    
+        circletips()
+    });
+
+}
+
+// ==============
+// Messages Dates
+// ==============
+
+function messages_dates() {
+    
+    var c_scheme = ['#0D47A1', '#0D47A1'];
+    
+    // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'messages-dates')
+        .append('div')
+            .attr('class', 'section title')
+            .html('Private Messages by Days of the Week');
+        
+    $.get('/messages_dates', function(d) {
+        
+        var max = 0;
+    
+        for (var i = 0; i < d.length; i++) {
+            if (max < d[i].tos_highest) max = d[i].tos_highest;
+            if (max < d[i].froms_highest) max = d[i].froms_highest;
+        }
+        
+        // set scale to highest value
+        var scale = d3.scaleLinear()
+            .domain([0, data_radius(max)])
+            .range([0, 50]);
+        
+        for (var i = 0; i < d.length; i++) {
+     
+            // set player id
+            var id = String('.p' + (i + 1));
+            
+            // Player Name
+             d3.select('#messages-dates')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+                    
+            // ========
+            // Tos
+            // ========
+            d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Outgoing Private Messages');
+            
+            // Circles          
+            d3.select('#messages-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].tos)
+                .enter()
+                .append("circle")
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('title', function (d) { return delimit(d) + ' words' })
+                    .attr('hover-color', c_scheme[0])    
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)           
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+    
+            
+            // Days of the week
+            d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'week tos')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week tos')
+                    .style('float', 'left')
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });
+            
+            // report
+             d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has said a total of ' + delimit(d[i].tos_total) + ' words, and talks the most on ' + days[d[i].day_tos_most] + '.');
+               
+            
+            // ========
+            // froms
+            // ========
+            d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Incoming Private Messages');
+            
+            // Circles          
+            d3.select('#messages-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].froms)
+                .enter()
+                .append("circle")
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('title', function (d) { return delimit(d) + ' words' })
+                    .attr('hover-color', c_scheme[0])                  
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)                
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+            
+            // Days of the week
+            d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'week froms')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week froms')
+                    .style('float', 'left')
+                    // .style('border-left', '1px solid gray')
+                    // .style('border-right', '1px solid gray')                    
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });           
+        
+            // report
+             d3.select('#messages-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has received a total of ' + delimit(d[i].froms_total) + ' words, and receives the most on ' + days[d[i].day_froms_most] + '.');
+        
+                    
+        } // end for loop
+        
+        tooltips();     
+
     });
 }
 
+// ==============
+// Damage Dates
+// ==============
+
+function damage_dates() {
+    
+    var c_scheme = ['#EF5350', '#EF5350'];
+    
+    // Select #main div, add #money and then .section .title
+    d3.select('#main')
+        .append('div')
+            .attr('id', 'damage-dates')
+        .append('div')
+            .attr('class', 'section title')
+            .html('Damage Statistics by Days of the Week');
+        
+    $.get('/damage_dates', function(d) {
+        
+        var max = 0;
+        
+        for (var i = 0; i < d.length; i++) {
+            if (max < d[i].inflicted_highest) max = d[i].inflicted_highest;
+            if (max < d[i].received_highest) max = d[i].received_highest;
+        }
+        
+        // set scale to highest value
+        var scale = d3.scaleLinear()
+            .domain([0, data_radius(max)])
+            .range([0, 50]);
+ 
+         for (var i = 0; i < d.length; i++) {
+            
+            // set player id
+            var id = String('.p' + (i + 1));
+            
+            // Player Name
+             d3.select('#damage-dates')
+                .append('div')
+                    .attr('class', id.replace('.', ''))
+                .append('div')
+                    .attr('class', 'player-name')
+                    .html('Player ' + (i + 1));
+           
+            
+            var div = d3.select("body").append("div")	
+                .attr("class", "tooltip")				
+                .style("opacity", 0);
+                    
+            // ========
+            // inflicts
+            // ========
+            d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Overall Damage Inflicted');
+            
+            // Circles          
+            d3.select('#damage-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].receives)
+                .enter()
+                .append("circle")
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('title', function (d) { return delimit(d) + ' damage' })
+                    .attr('hover-color', c_scheme[0])    
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)           
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+            
+            // Days of the week
+            d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'week inflicts')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week inflicts')
+                    .style('float', 'left')
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });
+            
+            // report
+             d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has inflicted a total of ' + delimit(d[i].inflicted_total) + ' damage, and inflicts the most on ' + days[d[i].day_inflicted_most] + '.');
+            
+            // ========
+            // Received
+            // ========
+            d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'graph-descriptor circle')
+                    .html('Overall Damage Received');
+            
+            // Circles          
+            d3.select('#damage-dates ' + id)
+                .append('svg')
+                    .attr("width", 960)
+                    .attr("height", 100)
+                .selectAll("circle")
+                .data(d[i].receives)
+                .enter()
+                .append("circle")
+                    .attr('title', function (d) { return delimit(d) + ' damage' })
+                    .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
+                    .attr("cy", 50)
+                    .attr("r", 0)
+                    .attr('hover-color', c_scheme[0])                  
+                    .style("fill", c_scheme[0])
+                .on('mouseover', mouse_over)					
+                .on('mouseout', mouse_out)                
+                .transition()
+                    .duration(500)
+                    .delay(function (d, i) { return i * 50 })
+                    .attr("r", function (d) { return scale(data_radius(d)); });
+            
+            // Days of the week
+            d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'week receives')
+                .selectAll('div')
+                    .data(days)
+                    .enter()
+                .append('div')
+                    .attr('class', 'day-of-week receives')
+                    .style('float', 'left')
+                    // .style('border-left', '1px solid gray')
+                    // .style('border-right', '1px solid gray')                    
+                    .style('text-align', 'center')
+                    .style('width', 137.143 + 'px')
+                    .html(function(d) { return d });           
+
+            // report
+             d3.select('#damage-dates ' + id)
+                .append('div')
+                    .attr('class', 'report')
+                    .html(player_names[i] + ' has received a total of ' + delimit(d[i].received_total) + ' damage, and receives the most on ' + days[d[i].day_received_most] + '.');
+
+                    
+        } // end for loop
+    
+        circletips(); 
+    });
+}
+ 
 function sum(player, attribute) {
     var accumulator = 0;
     for (var i = 0; i < player.length; i++) {
@@ -568,3 +1164,16 @@ function delimit(d) {
     return d.toLocaleString();
 }
 
+function data_radius(d) {
+
+    return Math.sqrt(d/Math.PI);
+}
+
+// functions
+money();
+messages();
+damage();
+
+// money_dates();
+// messages_dates();
+// damage_dates();

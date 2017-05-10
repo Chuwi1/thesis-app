@@ -786,7 +786,7 @@ function convert_time(raw) {
     var time = raw.split(' : ')[0].split(' ')[0].replace(/\./gi, '-')
     var date = raw.split(' : ')[0].split(' ')[1];
     var final = time + 'T' + date;
-    return final;
+    return new Date(Date.parse(final));
 }
 
 function check_suffix(name) {
