@@ -12,7 +12,7 @@ var server = http.createServer(app);
 // Mongo URL
 var url = 'mongodb://' + process.env.IP + ':27017/';
 // var env_url = process.env.MONGO_URL;
-// var env_url = '';
+var env_url = '';
 
 // Player List
 var p = ['player_01', 'player_02', 'player_03'];
@@ -62,9 +62,7 @@ function money_data(d) {
   
   }
   
-
-  
-  console.log(earned)
+  // console.log(earned)
   return d; 
 }
 
@@ -485,9 +483,12 @@ app.get('/damage_dates', callback);
 //   var conns = 0;
 
 //   // single connection
-//   MongoClient.connect(env_url, function(e, db) {
     
-//     // player_01
+//   // break this down into three separate connections.
+  
+//   // player_01
+//   MongoClient.connect(env_url, function(e, db) {
+//     console.log('conneting player 1')
 // 		db.collection(p[0]).aggregate(pipeline[req.url]()).toArray(function(e, d) {
 // 		  res_data[0] = reshape[req.url](d);
 // 	    conns++;
@@ -496,8 +497,11 @@ app.get('/damage_dates', callback);
 // 	      res.json(res_data);
 // 	    }
 // 		});
+//   }) // end mongo connect
 
-//     // player_02
+//   // player_02
+//   MongoClient.connect(env_url, function(e, db) {
+//     console.log('conneting player 2')    
 // 		db.collection(p[1]).aggregate(pipeline[req.url]()).toArray(function(e, d) {
 // 		  res_data[1] = reshape[req.url](d);
 // 	    conns++;
@@ -506,8 +510,11 @@ app.get('/damage_dates', callback);
 // 	      res.json(res_data);
 // 	    }
 // 		});
-
-//     // player_03
+//   }) // end mongo connect
+  
+//   // player_03
+//   MongoClient.connect(env_url, function(e, db) {
+//     console.log('conneting player 3')    
 // 		db.collection(p[2]).aggregate(pipeline[req.url]()).toArray(function(e, d) {
 // 		  res_data[2] = reshape[req.url](d);
 // 	    conns++;
@@ -516,8 +523,8 @@ app.get('/damage_dates', callback);
 // 	      res.json(res_data);
 // 	    }
 // 		});
-
 //   }) // end mongo connect
+  
 // } // end callback
 
 function callback(req, res) {
@@ -535,7 +542,6 @@ function callback(req, res) {
     });  
   }
 }
-
 
 // if number of connections to mongo db is 3 (number of players) send stuff over
 function check(conns, res, res_data) {

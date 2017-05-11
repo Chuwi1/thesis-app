@@ -2,6 +2,8 @@
 This repository contains updates and notes for the visualiztion application
 
 [Prototype](https://thesis-app-neuralism.c9users.io/)
+[Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
+[C9 URL](https://thesis-app-neuralism.c9users.io/)
 
 ## Key Back End files
 
