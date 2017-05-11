@@ -1,9 +1,9 @@
 ## Thesis App
 This repository contains updates and notes for the visualiztion application
 
-[Prototype](https://thesis-app-neuralism.c9users.io/)
-[Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
-[Presenation](https://github.com/neuralism/thesis-app/presentation.pdf)
+- [Prototype](https://thesis-app-neuralism.c9users.io/)
+- [Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
+- [Presenation](https://github.com/neuralism/thesis-app/blob/master/presentation.pdf)
 
 ## Key Back End files
 
