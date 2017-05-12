@@ -469,7 +469,7 @@ function damage() {
             .attr('id', 'damage')
         .append('div')
             .attr('class', 'section title')
-            .html('Damage Statistics');
+            .html('Skills and Damage');
 
     function populate() {
     
@@ -975,7 +975,7 @@ function damage_dates() {
             .attr('id', 'damage-dates')
         .append('div')
             .attr('class', 'section title')
-            .html('Damage Statistics by Days of the Week');
+            .html('Skills and Damage by Days of the Week');
         
     $.get('/damage_dates', function(d) {
         
