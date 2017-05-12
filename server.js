@@ -45,25 +45,70 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
 // Mongo Aggregation
 var money_pipeline = [
   { $match : { $or : [ { money_spent : { $ne : false } }, { money_earned : { $ne : false } } ] } },
-  { $project : { _id : false, time: 1, money_spent : 1, money_earned : 1 } }
+  { $project : { _id : false, money_earned : 1, money_spent : 1 } }
 ];
 
 // Reshape Aggregated Data
 function money_data(d) {
   
-  var earned = [];
-  var spent = [];
+  var earnings = [];
+  var spendings = [];
+  
+  var earnings_total = 0;
+  var spendings_total = 0;
+  
+  var earnings_transactions = 0;
+  var spendings_transactions = 0;
+  
+  var earnings_highest_transaction = 0;
+  var spendings_highest_transaction = 0;
+
+  var earnings_lowest_transaction = 0;
+  var spendings_lowest_transaction = 0;
+  
+  var money = {};
   
   for (var i = 0; i < d.length; i++) {
-
-    if (d.money_earned != false) {
-      earned.push(d.money_earned);
+    if (d[i].money_earned != false) {
+      earnings.push(d[i].money_earned);
+      earnings_total += d[i].money_earned
     }
-  
+    
+    if (d[i].money_spent != false) {
+      spendings.push(d[i].money_spent);
+      spendings_total += d[i].money_spent;
+    }
   }
   
-  // console.log(earned)
-  return d; 
+  earnings = _.sortBy(earnings).reverse();
+  spendings = _.sortBy(spendings).reverse();  
+  
+  earnings_transactions = earnings.length;
+  spendings_transactions = spendings.length;
+  
+  earnings_highest_transaction = _.max(earnings);
+  spendings_highest_transaction = _.max(spendings);
+  
+  earnings_lowest_transaction = _.min(earnings);
+  spendings_lowest_transaction = _.min(spendings);
+  
+  money = {
+    earnings: earnings,
+    earnings_total: earnings_total,
+    earnings_transactions: earnings_transactions,
+    earnings_highest: earnings_highest_transaction,
+    earnings_lowest: earnings_lowest_transaction,
+    spendings: spendings,
+    spendings_total: spendings_total,
+    spendings_transactions: spendings_transactions,
+    spendings_highest: spendings_highest_transaction,
+    spendings_lowest: spendings_lowest_transaction    
+  };
+  
+  
+  // console.log(money);
+  
+  return money;
 }
 
 // ==========

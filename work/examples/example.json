@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "Dorkles",
+    "incoming_messages": {
+      "total_messages": 5,
+      "timestamps": [
+        "2017-04-06T15:03:20",
+        "2017-04-06T15:03:28",
+        "2017-04-06T15:03:56",
+        "2017-04-06T15:06:14",
+        "2017-04-06T15:06:17"
+      ]
+    },
+    "outgoing_messages": {
+      "total_messages": 2,
+      "timestamps": [
+        "2017-04-06T15:03:20",
+        "2017-04-06T15:03:28"
+      ]
+    }
+  },
+  {
+    "_id": "Kitty-Cat",
+    "incoming_messages": {
+      "total_messages": 3,
+      "timestamps": [
+        "2017-04-06T15:03:20",
+        "2017-04-06T15:03:28",
+        "2017-04-06T15:03:56"
+      ]
+    },
+    "outgoing_messages": {
+      "total_messages": 4,
+      "timestamps": [
+        "2017-04-06T15:03:20",
+        "2017-04-06T15:03:28",
+        "2017-04-06T15:06:14",
+        "2017-04-06T15:06:17"        
+      ]
+    }
+  },
+  {
+      "_id": "Dorkles",
+      "incoming_messages": {
+        "total_messages": 5,
+        "timestamps": [
+          "2017-04-06T15:03:20",
+          "2017-04-06T15:03:28",
+          "2017-04-06T15:03:56",
+          "2017-04-06T15:06:14",
+          "2017-04-06T15:06:17"
+        ]
+      },
+      "outgoing_messages": {
+        "total_messages": 2,
+        "timestamps": [
+          "2017-04-06T15:03:20",
+          "2017-04-06T15:03:28"
+        ]
+      }
+    }
+]

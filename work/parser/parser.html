@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+    body 
+    {
+        font-size:18pt;
+    }
+</style>
+<title>Reading a Text File</title>
+<script type="text/javascript">
+    // function test() {
+    //     var str = "the man in the car is an asshole."
+        
+    //     var result = new RegExp('the man').test(str); // output: true (boolean)
+    //     console.log(result);
+    // }
+
+    // test();
+    
+    function init() {
+        var bHaveFileAPI = (window.File && window.FileReader);
+
+        if (!bHaveFileAPI) {
+            alert("This browser doesn't support the File API");
+            return;
+        }
+
+        document.getElementById("fileElem").addEventListener("change", onFileChanged);
+    }
+
+    function onFileChanged(theEvt) {
+        var thefile = theEvt.target.files[0];
+
+        // check to see if it is text
+        if (thefile.type != "text/plain") {
+            document.getElementById('filecontents').innerHTML = "No text file chosen";
+            return;
+        }
+
+        var reader = new FileReader();
+        var removed = [];
+
+        reader.onload = function (evt) {
+
+            var resultText = evt.target.result.split("\n");
+
+            for (var i = 0; i < resultText.length; i++) {
+                var sentence = resultText[i];
+
+                // outgoing whispers
+                // checks if ': You Whisper to' exists in the sentence
+                if (new RegExp(': You Whisper to').test(sentence)) {
+                    resultText[i] = sentence.split(']:')[0] + ']:';
+                    removed.push(resultText[i]);
+                }
+
+                // incoming whispers
+                // checks if '] Whispers:' exists in the sentence
+                if (new RegExp('] Whispers:').test(sentence)) {
+                    resultText[i] = sentence.split('] Whispers:')[0] + '] Whispers:';
+                    removed.push(resultText[i]);       
+                }
+            }
+
+            for (var i = 0; i < removed.length; i++) {
+
+                var newDiv = document.createElement("div"); 
+                var newContent = document.createTextNode(removed[i] + ' conversation deleted'); 
+                newDiv.appendChild(newContent); //add the text node to the newly created div. 
+
+                // add the newly created element and its content into the DOM 
+                var currentDiv = document.getElementById("filecontents"); 
+                document.body.insertBefore(newDiv, currentDiv); 
+
+
+                // document.getElementById('filecontents').innerHTML = removed;
+            }
+        }
+
+        reader.readAsText(thefile);
+    }
+
+    window.addEventListener("load", init);
+</script>
+</head>
+<body>
+<h1>Reading File Data as Text</h1>
+<form action="">
+<label>Select a file: </label>
+<input type="file" name="files" id="fileElem" />
+</form>
+<p>File contents: </p>
+<!-- <textarea cols="80" rows="10" id="filecontents"></textarea> -->
+<div id="filecontents"></div>
+</body>
+</html>
