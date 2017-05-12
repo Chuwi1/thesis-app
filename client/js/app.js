@@ -20,7 +20,6 @@ function bar() {
         damage();
         cur_section = 'bar';
     }
-    
 }
 
 function week() {
@@ -32,7 +31,6 @@ function week() {
         damage_dates();
         cur_section = 'week';
     }
-    
 }
 
 function clear() {
@@ -103,48 +101,47 @@ function money() {
             .attr('class', 'section title')
             .html('In-Game Money');
     
-    $.get('/money', function(players) {
+    $.get('/money', function(d) {
+    
+        // // holder for max value
+        var max = [];
         
-        // multi-dimensional array containing max earned and spent for each player
-        var totals = [];
-        
-        // holder for max value
-        var max = 0;
-        
-        // aggregate transactions        
-        for (var i = 0; i < players.length; i++) {
-            totals.push([
-                sum(players[i], 'money_earned'),
-                sum(players[i], 'money_spent')
-            ]);
+        for (var i = 0; i < d.length; i++) {
+            max.push(d[i].earnings_total);
+            max.push(d[i].spendings_total)            
         }
 
-        // assign highest value - for use on scaleLinear
-        max = get_max(totals);
+        max = _.max(max);
         
-        // loop to populate visualisation
-        for (var i = 0; i < players.length; i++) {
-            
+        for (var i = 0; i < d.length; i++) {
+
             var id = String('.p' + (i + 1));
+
+            var earnings = d[i].earnings;
+            var spendings = d[i].spendings;
+
+            var earnings_total = d[i].earnings_total;
+            var spendings_total = d[i].spendings_total;
+
+            var earnings_highest = d[i].earnings_highest;
+            var earnings_lowest = d[i].earnings_lowest;
+    
             
-            var earnings = [];
-            var spendings = [];
-            
-            // push spent and earned variables to each array (what about timescale?)
-            for (var k = 0; k < players[i].length; k++) {
-                players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
-            }
-            
+            // // push spent and earned variables to each array (what about timescale?)
+            // for (var k = 0; k < players[i].length; k++) {
+            //     players[i][k].money_earned ? earnings.push(players[i][k].money_earned) : spendings.push(players[i][k].money_spent);
+            // }
+        
             // set scales
             var earnings_scale = d3.scaleLinear()
                 .domain([0, max])
                 // .range([1, 960]);
-                .range([1, 960 - (earnings.length * 2) + 1]);
+                .range([1, 960 - (earnings.length * 2)]);
     
             var spendings_scale = d3.scaleLinear()
                 .domain([0, max])
                 // .range([1, 960]);
-                .range([1, 960 - (spendings.length * 2) + 1]);        
+                .range([1, 960 - (spendings.length * 2)]);        
             
             // append visualisation
             d3.select('#money')
@@ -158,7 +155,7 @@ function money() {
             d3.select('#money ' + id)
                 .append('div')
                     .attr('class', 'graph-descriptor earnings')
-                    .html('Earned ' + delimit(totals[i][0]) + ' Kinah' + ' (' + rmt(totals[i][0]) + ')');
+                    .html('Earned ' + delimit(earnings_total) + ' Kinah' + ' (' + rmt(earnings_total) + ')');
     
             d3.select('#money ' + id)
                 .append('div')
@@ -168,13 +165,14 @@ function money() {
                     .enter()
                 .append('div')
                     .attr('class', 'unit tippy')
-                    .attr('title', function(d) { return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')' })
+                    .attr('title', function(d) { 
+                        return delimit(d) + ' Kinah' + ' (' + rmt(d) + ')'; })
                     .attr('hover-color', c_scheme[0])
                     .style('background-color', c_scheme[0])
                     .style('opacity', 1)                     
                     .style('height', '0px')
                     // .style('width', '0px')
-                    .style('width', function(d) { return earnings_scale(d) + 'px' } )                        
+                    .style('width', function(d) { return earnings_scale(d) + 'px'; })                        
                     .on('mouseover', mouse_over)
                     .on('mouseout', mouse_out)
                 .transition()
@@ -189,7 +187,7 @@ function money() {
             d3.select('#money ' + id)
                 .append('div')
                 .attr('class', 'graph-descriptor spendings')
-                .html('Spent: ' + delimit(totals[i][1]) + ' Kinah' + ' (' + rmt(totals[i][1]) + ')');
+                .html('Spent: ' + delimit(spendings_total) + ' Kinah' + ' (' + rmt(spendings_total) + ')');
     
             d3.select('#money ' + id)
                 .append('div')
@@ -204,7 +202,7 @@ function money() {
                     .style('background-color', c_scheme[1])
                     .style('opacity', 1)        
                     .style('height', '0px')
-                    .style('width', function(d) { return spendings_scale(d) + 'px' } )                    
+                    .style('width', function(d) { return spendings_scale(d) + 'px'; } )                    
                     .on('mouseover', mouse_over)
                     .on('mouseout', mouse_out)
                 .transition()
@@ -220,7 +218,7 @@ function money() {
                     .attr('class', 'report')
                     // .style('background-color', 'black')
                     // .style('height', '100px')
-                    .html(player_names[i] + ' earned ' + rmt(totals[i][0]) + ' and spent ' + rmt(totals[i][1]) + ' worth of in-game money based on Real Money Trading (RMT) exchange rates.');         
+                    .html(player_names[i] + ' earned ' + rmt(earnings_total) + ' and spent ' + rmt(earnings_total) + ' worth of in-game money based on Real Money Trading (RMT) exchange rates.');         
                     
             d3.selectAll('.graph.earnings')
                 .style('width', '0px')
@@ -321,7 +319,7 @@ function messages() {
         total_tos = sum(whisper_tos[0], 1);
         total_froms = sum(whisper_froms[0], 1);
         totals = [total_tos, total_froms];
-        console.log(totals)
+
         // assign highest value - for use on scaleLinear
         // max = get_max(totals);
         max = 7641;
@@ -488,7 +486,7 @@ function damage() {
         // console.log(dmg_inflicted);
         // console.log(max);
         
-        console.log(dmg_totals);
+        // console.log(dmg_totals);
 
         for (var i = 0; i < dmg_totals.length; i++) {
                 
