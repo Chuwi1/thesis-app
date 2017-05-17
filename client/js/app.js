@@ -15,19 +15,18 @@ var cur_section = 'bar';
 function bar() {
     if (cur_section != 'bar') {
         clear();
-        money();
         messages();
         damage();
+        money();
         cur_section = 'bar';
     }
 }
 
 function week() {
-    
     if (cur_section != 'week') {
         clear();
-        money_dates();
         messages_dates();
+        money_dates();
         damage_dates();
         cur_section = 'week';
     }
@@ -99,10 +98,10 @@ function money() {
             .attr('id', 'money')
         .append('div')
             .attr('class', 'section title')
-            .html('In-Game Money');
+            .html('In-Game Money Transactions');
     
     $.get('/money', function(d) {
-    
+
         // // holder for max value
         var max = [];
         
@@ -125,7 +124,6 @@ function money() {
 
             var earnings_highest = d[i].earnings_highest;
             var earnings_lowest = d[i].earnings_lowest;
-    
             
             // // push spent and earned variables to each array (what about timescale?)
             // for (var k = 0; k < players[i].length; k++) {
@@ -176,13 +174,12 @@ function money() {
                     .on('mouseover', mouse_over)
                     .on('mouseout', mouse_out)
                 .transition()
-                    .duration(function (d, i) { return i * 0.5 })
+                    .duration(function (d, i) { return 200 })
                     .delay(function (d, i) { return (i * 5) + 750 })
-                    .style('height', bar_height)
+                    .style('height', bar_height);
                     // .style('width', function(d) { return earnings_scale(d) + 'px' } )                       
-                    .style('opacity', 1);
+                    // .style('opacity', 1);
             
-
             // spendings
             d3.select('#money ' + id)
                 .append('div')
@@ -206,10 +203,10 @@ function money() {
                     .on('mouseover', mouse_over)
                     .on('mouseout', mouse_out)
                 .transition()
-                    .duration(function (d, i) { return i * 0.5 })
+                    .duration(function (d, i) { return 250 })
                     .delay(function (d, i) { return (i * 5) + 750 })
-                    .style('height', bar_height)
-                    .style('opacity', 1);
+                    .style('height', bar_height);
+                    // .style('opacity', 1);
             
             // console.log(earnings.length);
             // report
@@ -218,7 +215,7 @@ function money() {
                     .attr('class', 'report')
                     // .style('background-color', 'black')
                     // .style('height', '100px')
-                    .html(player_names[i] + ' earned ' + rmt(earnings_total) + ' and spent ' + rmt(earnings_total) + ' worth of in-game money based on Real Money Trading (RMT) exchange rates.');         
+                    .html(player_names[i] + ' earned ' + rmt(earnings_total) + ' and spent ' + rmt(earnings_total) + ' worth of In-Game Money Transactions based on Real Money Trading (RMT) exchange rates.');         
                     
             d3.selectAll('.graph.earnings')
                 .style('width', '0px')
@@ -301,7 +298,7 @@ function messages() {
                     from_list.push([players[i][k]._id.from, sum(players[i][k].whisper_length)]);
                 }
             }
-            
+
             to_list = _.sortBy(to_list, 1).reverse();
             from_list = _.sortBy(from_list, 1).reverse();            
             
@@ -654,7 +651,7 @@ function money_dates() {
             .attr('id', 'money-dates')
         .append('div')
             .attr('class', 'section title')
-            .html('In-Game Money by Days of the Week');
+            .html('In-Game Money Transactions by Days of the Week');
         
     $.get('/money_dates', function(d) {
         
@@ -668,7 +665,7 @@ function money_dates() {
         // set scale to highest value
         var scale = d3.scaleLinear()
             .domain([0, data_radius(max)])
-            .range([0, 50]);
+            .range([0, 25]);
  
          for (var i = 0; i < d.length; i++) {
             
@@ -700,13 +697,13 @@ function money_dates() {
             d3.select('#money-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].earnings)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('title', function (d) { return delimit(d) + ' Kinah' })
                     .attr('hover-color', c_scheme[0])    
@@ -758,14 +755,14 @@ function money_dates() {
             d3.select('#money-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].spendings)
                 .enter()
                 .append("circle")
                     .attr('title', function (d) { return delimit(d) + ' Kinah' })
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('hover-color', c_scheme[0])                  
                     .style("fill", c_scheme[0])
@@ -834,7 +831,7 @@ function messages_dates() {
         // set scale to highest value
         var scale = d3.scaleLinear()
             .domain([0, data_radius(max)])
-            .range([0, 50]);
+            .range([0, 25]);
         
         for (var i = 0; i < d.length; i++) {
      
@@ -861,13 +858,13 @@ function messages_dates() {
             d3.select('#messages-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].tos)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('title', function (d) { return delimit(d) + ' words' })
                     .attr('hover-color', c_scheme[0])    
@@ -913,13 +910,13 @@ function messages_dates() {
             d3.select('#messages-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].froms)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('title', function (d) { return delimit(d) + ' words' })
                     .attr('hover-color', c_scheme[0])                  
@@ -989,7 +986,7 @@ function damage_dates() {
         // set scale to highest value
         var scale = d3.scaleLinear()
             .domain([0, data_radius(max)])
-            .range([0, 50]);
+            .range([0, 25]);
  
          for (var i = 0; i < d.length; i++) {
             
@@ -1021,13 +1018,13 @@ function damage_dates() {
             d3.select('#damage-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].receives)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('title', function (d) { return delimit(d) + ' damage' })
                     .attr('hover-color', c_scheme[0])    
@@ -1071,14 +1068,14 @@ function damage_dates() {
             d3.select('#damage-dates ' + id)
                 .append('svg')
                     .attr("width", 960)
-                    .attr("height", 100)
+                    .attr("height", 50)
                 .selectAll("circle")
                 .data(d[i].receives)
                 .enter()
                 .append("circle")
                     .attr('title', function (d) { return delimit(d) + ' damage' })
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
-                    .attr("cy", 50)
+                    .attr("cy", 25)
                     .attr("r", 0)
                     .attr('hover-color', c_scheme[0])                  
                     .style("fill", c_scheme[0])
@@ -1168,9 +1165,9 @@ function data_radius(d) {
 }
 
 // functions
-money();
 messages();
 damage();
+money();
 
 // money_dates();
 // messages_dates();

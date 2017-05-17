@@ -84,12 +84,12 @@ div {
   margin-top: 20px;
   border-top: 1px dotted lightgray;
   padding-top: 4px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 #main .week {
   font-family: "Roboto Mono", monospace;
-  margin-top: 10px;
-  margin-bottom: 50px;
+  margin-top: 5px;
+  margin-bottom: 40px;
 }
 #main .mono-bold {
   font-family: "Roboto Mono", monospace;

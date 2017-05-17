@@ -3,6 +3,9 @@ var express = require('express');
 var http = require('http');
 var MongoClient = require('mongodb').MongoClient;
 
+// https://www.npmjs.com/package/freq
+var freq = require('freq');
+
 const _ = require("underscore");
 
 // App and Server Stuff
@@ -50,7 +53,7 @@ var money_pipeline = [
 
 // Reshape Aggregated Data
 function money_data(d) {
-  
+
   var earnings = [];
   var spendings = [];
   
@@ -71,7 +74,7 @@ function money_data(d) {
   for (var i = 0; i < d.length; i++) {
     if (d[i].money_earned != false) {
       earnings.push(d[i].money_earned);
-      earnings_total += d[i].money_earned
+      earnings_total += d[i].money_earned;
     }
     
     if (d[i].money_spent != false) {
@@ -105,9 +108,6 @@ function money_data(d) {
     spendings_lowest: spendings_lowest_transaction    
   };
   
-  
-  // console.log(money);
-  
   return money;
 }
 
@@ -118,12 +118,74 @@ function money_data(d) {
 // Mongo Aggregation
 var messages_pipeline = [
   { $match : { $or : [ { whisper_to : { $ne : false } }, { whisper_from : { $ne : false } } ] } },
-  { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, time : { $push : '$time' } } }
+  { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, text : { $push : '$whisper_text' } } }
+  // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, whisper_length : { $push : '$whisper_length' }, text : { $push : '$whisper_text' }, raw : { $push : '$raw' } } }
+  // { $project : { _id : false, whisper_to : 1, whisper_from : 1, whisper_length : 1, raw : 1 } }
   // { $group : { _id : { to : '$whisper_to', from : '$whisper_from' }, instances : { $push : { whisper_length : '$whisper_length', time : '$time' } } } },  
 ];
 
 // Reshape Aggregated Data
 function messages_data(d) {
+
+  // console.log(d);
+  
+  var tos = [];
+  var froms = [];
+  
+  var to_words = '';
+  var from_words = '';
+  
+  var to_words_top = [];
+  var from_words_top = [];
+  
+  console.log('player');
+  
+  // for (var i = 0; i < d.length; i++) {
+    
+  //   // if whisper to
+  //   if (d[i]._id.to != false) {
+      
+  //     // container to hold all words
+  //     var text = '';
+  //     var top_words = [];
+  //     var friend = {};
+      
+  //     // loop into the text list of the friend
+  //     for (var k = 0; k < d[i].text.length; k++) {
+  //       text += ' ' + d[i].text;
+  //     }
+      
+  //     text = freq(text);
+  //     text = _.sortBy(text, 'count').reverse();
+
+  //     text[0] != undefined ? top_words[0] = text[0] : top_words[0] = { word: null, count: null };
+  //     text[1] != undefined ? top_words[1] = text[1] : top_words[1] = { word: null, count: null };
+  //     text[2] != undefined ? top_words[2] = text[2] : top_words[2] = { word: null, count: null };
+      
+  //     friend = {
+  //       name: d[i]._id.to,
+  //       length: d[i].whisper_length.reduce(add, 0),
+  //       top_words: top_words
+  //     };
+      
+  //     // WORK ON THIS
+      
+      
+  //     // global top words
+  //     to_words += d[i].text;
+  //   }
+    
+  //   if (d[i]._id.from != false) {
+  //     froms.push(d[i].whisper_from); 
+  //     from_words += d[i].text;
+  //   }
+  // }
+
+
+  // console.log(to_words);
+
+  // console.log(tos);
+  
   return d; 
 }
 
@@ -480,6 +542,38 @@ function damage_dates_data(d) {
   return damage_dates; 
 }
 
+function damage_pipeline() {
+  // { $match : { $or : [ { damage_inflicted : { $ne : false } }, { damage_received : { $ne : false } } ] } },
+  // { $project : { _id : false, damage_inflicted : 1, damage_received : 1, damage_skill : 1,  damage_critical : 1 } }
+}
+
+function damage_data(d) {
+  
+  // var inflicted = [];
+  // var received = [];
+
+  // for (var i = 0; i < d.length; i++) {
+  //   if (d[i].damage_inflicted != false) {
+  //     inflicted.push(d[i].damage_inflicted);
+      
+  //   }
+  //   if (d[i].damage_received != false) {
+  //     inflicted.push(d[i].damage_received);
+  //   }
+  // } 
+
+  return d;  
+}
+
+      // _id : '$damage_skill', 
+      // dmg : { $sum : '$damage_received' },  
+      // min : { $min : '$damage_received' },
+      // max : { $max : '$damage_received' },
+      // mean : { $avg : '$damage_received' },
+      // crits : { $sum : '$damage_received_critical' },
+      // count : { $sum : 1 }
+
+
 // Lookup Tables
 // They perform faster than switch and if-else statements
 // https://jsperf.com/if-switch-lookup-table/10
@@ -494,7 +588,8 @@ var pipeline = {
   '/dmg_totals': function() { return dmg_totals_pipeline; },
   '/money_dates': function() { return money_dates_pipeline; },
   '/messages_dates': function() { return messages_dates_pipeline; },
-  '/damage_dates': function() { return damage_dates_pipeline; }, 
+  '/damage_dates': function() { return damage_dates_pipeline; },
+  '/damage': function() { return damage_pipeline; }
 };
 
 // Reshape the Data
@@ -506,8 +601,8 @@ var reshape = {
   '/dmg_totals': function(d) { return dmg_totals_data(d); },
   '/money_dates': function(d) { return money_dates_data(d); },
   '/messages_dates': function(d) { return messages_dates_data(d); },
-  '/damage_dates': function(d) { return damage_dates_data(d); }    
-
+  '/damage_dates': function(d) { return damage_dates_data(d); },
+  '/damage': function(d) { return damage_data(); }
 };
 
 // Assign Get Method
@@ -519,6 +614,7 @@ app.get('/dmg_totals', callback);
 app.get('/money_dates', callback);
 app.get('/messages_dates', callback);
 app.get('/damage_dates', callback);
+app.get('/damage', callback);
 
 // // Mongodb.net callback
 // function callback(req, res) {
