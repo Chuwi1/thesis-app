@@ -6,8 +6,9 @@ This repository contains updates and notes for the visualiztion application
 - [Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
 
 ## Presentation Slides and Video
-- [Presentation Slides](https://github.com/neuralism/thesis-app/blob/master/presentation.pdf)
-- [Visualization Video](https://github.com/neuralism/thesis-app/blob/master/client/video/visualization.mp4)
+- [Presentation slides](https://github.com/neuralism/thesis-app/blob/master/presentation.pdf)
+- [Visualization video](https://github.com/neuralism/thesis-app/blob/master/client/video/visualization.mp4)
+- [Video on Vimeo](https://vimeo.com/217914631)
 
 ## Feature List
 - A platform for Aion players to review their gameplay activity in a visually more engaging way.
