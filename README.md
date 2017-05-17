@@ -1,9 +1,22 @@
 ## Thesis App
 This repository contains updates and notes for the visualiztion application
 
-- [Prototype](https://thesis-app-neuralism.c9users.io/)
+## Visualization
+- [Prototype/Staging](https://thesis-app-neuralism.c9users.io/)
 - [Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
-- [Presentation](https://github.com/neuralism/thesis-app/blob/master/presentation.pdf)
+
+## Presentation Slides and Video
+- [Presentation Slides](https://github.com/neuralism/thesis-app/blob/master/presentation.pdf)
+- [Visualization Video](https://github.com/neuralism/thesis-app/blob/master/client/video/visualization.mp4)
+
+## Feature List
+- A platform for Aion players to review their gameplay activity in a visually more engaging way.
+- Grow as a player, improve your gameplay buy finding opportunities to optimize it!
+- Keep track and store your gameplay activity and compare it with other players. Exchange tips
+
+## Creators
+- Chang Kai Joshua Lee
+- Identity of players are kept anonymous
 
 ## Key Back End files
 

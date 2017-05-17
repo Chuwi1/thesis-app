@@ -13,6 +13,7 @@ var data = [p1_data, p2_data, p3_data];
 var p = ['player_01', 'player_02', 'player_03'];
 
 for (var i = 0; i < data.length; i++) {
+    
     MongoClient.connect(url + p[i], function(err, db) {
         
         var index = Number(db.databaseName.split('0')[1]) - 1;
