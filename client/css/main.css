@@ -1,9 +1,11 @@
 body {
-  background: #f2f2f2;
+  background: #fefefe;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-color: #333;
   margin-top: 30px;
+  margin: 0;
+  padding: 0;
 }
 
 div {
@@ -17,47 +19,50 @@ div {
   margin: 0 auto;
 }
 
-#header {
-  padding-top: 3px;
-  height: 130px;
-  border-top: 3px solid black;
-}
-#header div {
-  float: left;
-  width: 65%;
-}
-#header #headline {
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
-  font-size: 2em;
-  line-height: 1.2em;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-#header #intro {
-  width: 60%;
-  margin-bottom: 20px;
+#header-strip {
+  width: 100%;
+  background-color: #333;
 }
 
-#nav {
+#header {
+  background-color: #333;
   width: 960px;
-  margin-bottom: 20px;
+  margin: 0 auto;
+  padding-top: 27px;
+  padding-bottom: 30px;
+  height: 179px;
 }
-#nav .btn {
-  border: 0;
+#header #headline {
+  width: 480px;
+  float: left;
+}
+#header #intro {
+  color: #999;
+  width: 480px;
+  float: left;
+}
+#header .title-img {
+  margin-bottom: 29px;
+}
+
+.btn {
+  border: 0px;
   background-color: #757575;
-  padding: 9px 15px 9px 15px;
-  color: #EEEEEE;
+  padding: 7px 12px 8px 12px;
+  color: #eeeeee;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 13px;
   border-radius: 4px;
 }
-#nav .btn:hover {
+
+.btn:hover {
   background-color: #424242;
 }
 
 #main .section {
   margin-bottom: 20px;
   position: relative;
+  margin-top: 31px;
 }
 #main .title {
   font-size: 1.8em;
@@ -97,7 +102,7 @@ div {
 }
 #main .graph {
   height: 30px;
-  background-color: #e9e9e9;
+  background-color: #f4f4f4;
   display: block;
   clear: left;
   overflow: hidden;
@@ -143,8 +148,12 @@ div {
   border-color: #EF5350;
 }
 
+.spacer {
+  height: 3px;
+}
+
 #footer {
-  margin-bottom: 50px;
+  margin-bottom: 100px;
 }
 
 .tippy-tooltip.aion-theme {

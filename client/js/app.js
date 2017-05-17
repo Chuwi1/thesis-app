@@ -2,6 +2,117 @@
 var bar_height = '30px';
 var days = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays'];
 var player_names = ['Player 1', 'Player 2', 'Player 3'];
+var scroll = 0;
+var cur_section = 'bar';
+
+var scroll_speed = 1.75;
+var fade_speed = 0.5;
+var offset_y = 30;
+
+$(document).keydown(function(e) {
+    
+    if (e.keyCode == 39) { // down arrow
+
+        scroll++;
+        
+        if (cur_section == 'bar') {
+            if (scroll == 1) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#money', offsetY: offset_y }, ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                
+                TweenLite.to($('#money'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#messages'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#damage'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+            }  
+            if (scroll == 2) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#messages', offsetY: offset_y }, ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                  
+                TweenLite.to($('#money'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#messages'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#damage'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+            }        
+            if (scroll == 3) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#damage', offsetY: offset_y }, ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                  
+                TweenLite.to($('#money'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#messages'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#damage'), fade_speed, { opacity: 1, ease: Power2.easeOut });            
+            } 
+            if (scroll > 3) {
+                TweenLite.to(window, scroll_speed, { scrollTo:'html', ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 1, ease: Power2.easeOut });                  
+                TweenLite.to($('#money'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#messages'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#damage'), fade_speed, { opacity: 1, ease: Power2.easeOut });            
+                scroll = 0;
+            }
+        }
+        
+        if (cur_section == 'week') {
+             if (scroll == 1) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#money-dates', offsetY: offset_y }, ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                  
+                TweenLite.to($('#money-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#messages-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#damage-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+            }  
+            if (scroll == 2) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#messages-dates', offsetY: offset_y }, ease: Power2.easeOut }); 
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                  
+                TweenLite.to($('#money-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#messages-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#damage-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+            }        
+            if (scroll == 3) {
+                TweenLite.to(window, scroll_speed, { scrollTo: { y: '#damage-dates', offsetY: offset_y }, ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });                  
+                TweenLite.to($('#money-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#messages-dates'), fade_speed, { opacity: 0.25, ease: Power2.easeOut });
+                TweenLite.to($('#damage-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });            
+            } 
+            if (scroll > 3) {
+                TweenLite.to(window, scroll_speed, { scrollTo:'html', ease: Power2.easeOut });
+                TweenLite.to($('#header'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#nav'), fade_speed, { opacity: 1, ease: Power2.easeOut });                  
+                TweenLite.to($('#money-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#messages-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+                TweenLite.to($('#damage-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });            
+                scroll = 0;
+            }
+        }
+        
+        
+    } // end down arrow key press
+    
+    if (e.keyCode == 37) { // up arrow
+        scroll = 0;
+        TweenLite.to(window, 0.5, { scrollTo:'html', ease: Power2.easeOut });
+        TweenLite.to($('#header'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+        TweenLite.to($('#nav'), fade_speed, { opacity: 1, ease: Power2.easeOut });          
+        TweenLite.to($('#money'), fade_speed, { opacity: 1 });
+        TweenLite.to($('#messages'), fade_speed, { opacity: 1 });
+        TweenLite.to($('#damage'), fade_speed, { opacity: 1 });
+        TweenLite.to($('#money-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+        TweenLite.to($('#messages-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });
+        TweenLite.to($('#damage-dates'), fade_speed, { opacity: 1, ease: Power2.easeOut });          
+    }
+});
+
+
+
+
+// function test() {
+//     console.log('test');
+//     TweenLite.to(window, 1, { scrollTo:"#money" });
+// }
+
+// setTimeout(test, 1000);
 
 // delayer
 function get_delay(i) {
@@ -10,25 +121,27 @@ function get_delay(i) {
     return delay_start + (i * delay_multiplier);
 }
 
-var cur_section = 'bar';
+
 
 function bar() {
     if (cur_section != 'bar') {
         clear();
+        money();
         messages();
         damage();
-        money();
         cur_section = 'bar';
+        scroll = 0;
     }
 }
 
 function week() {
     if (cur_section != 'week') {
         clear();
-        messages_dates();
         money_dates();
+        messages_dates();
         damage_dates();
         cur_section = 'week';
+        scroll = 0;        
     }
 }
 
@@ -134,12 +247,12 @@ function money() {
             var earnings_scale = d3.scaleLinear()
                 .domain([0, max])
                 // .range([1, 960]);
-                .range([1, 960 - (earnings.length * 2)]);
+                .range([1, 960 - (earnings.length * 2) + 1]);
     
             var spendings_scale = d3.scaleLinear()
                 .domain([0, max])
                 // .range([1, 960]);
-                .range([1, 960 - (spendings.length * 2)]);        
+                .range([1, 960 - (spendings.length * 2) + 1]);        
             
             // append visualisation
             d3.select('#money')
@@ -203,7 +316,7 @@ function money() {
                     .on('mouseover', mouse_over)
                     .on('mouseout', mouse_out)
                 .transition()
-                    .duration(function (d, i) { return 250 })
+                    .duration(function (d, i) { return 200 })
                     .delay(function (d, i) { return (i * 5) + 750 })
                     .style('height', bar_height);
                     // .style('opacity', 1);
@@ -230,11 +343,17 @@ function money() {
                     .duration(750)
                     .delay(0)
                     .style('width', '960px');        
-                    
-        }
+       
+        } // end loop
 
-        tooltips();    
-    });
+        d3.select('#money')
+            .append('div')
+            .attr('class', 'spacer');
+            
+        tooltips();
+        
+    }); // end get request
+
 }
 
 
@@ -417,8 +536,14 @@ function messages() {
                     .duration(750)
                     .delay(0)
                     .style('width', '960px');    
-        }
         
+            
+        } // end loop
+
+        d3.select('#messages')
+            .append('div')
+            .attr('class', 'spacer');
+            
         tooltips(); 
     });
 }
@@ -632,7 +757,12 @@ function damage() {
                     );                      
         } // end loop
         
+        d3.select('#damage')
+            .append('div')
+            .attr('class', 'spacer');
+            
         tooltips();
+        
     } // end populate
 
 } // end dmg
@@ -667,7 +797,7 @@ function money_dates() {
             .domain([0, data_radius(max)])
             .range([0, 25]);
  
-         for (var i = 0; i < d.length; i++) {
+        for (var i = 0; i < d.length; i++) {
             
             // set player id
             var id = String('.p' + (i + 1));
@@ -691,7 +821,7 @@ function money_dates() {
             d3.select('#money-dates ' + id)
                 .append('div')
                     .attr('class', 'graph-descriptor circle')
-                    .html('Overall Earnings');
+                    .html('Earnings');
             
             // Circles          
             d3.select('#money-dates ' + id)
@@ -749,7 +879,7 @@ function money_dates() {
             d3.select('#money-dates ' + id)
                 .append('div')
                     .attr('class', 'graph-descriptor circle')
-                    .html('Overall Spendings');
+                    .html('Spendings');
             
             // Circles          
             d3.select('#money-dates ' + id)
@@ -797,8 +927,12 @@ function money_dates() {
 
                     
         } // end for loop
-    
-        circletips()
+
+        d3.select('#money-dates')
+            .append('div')
+            .attr('class', 'spacer');
+
+        circletips();
     });
 
 }
@@ -953,7 +1087,11 @@ function messages_dates() {
                     
         } // end for loop
         
-        tooltips();     
+        d3.select('#messages-dates')
+            .append('div')
+            .attr('class', 'spacer');
+            
+        circletips(); 
 
     });
 }
@@ -1012,7 +1150,7 @@ function damage_dates() {
             d3.select('#damage-dates ' + id)
                 .append('div')
                     .attr('class', 'graph-descriptor circle')
-                    .html('Overall Damage Inflicted');
+                    .html('Damage Inflicted');
             
             // Circles          
             d3.select('#damage-dates ' + id)
@@ -1020,7 +1158,7 @@ function damage_dates() {
                     .attr("width", 960)
                     .attr("height", 50)
                 .selectAll("circle")
-                .data(d[i].receives)
+                .data(d[i].inflicts)
                 .enter()
                 .append("circle")
                     .attr("cx", function(d, i) { return (137.143 * i) + 68.572; })
@@ -1062,7 +1200,7 @@ function damage_dates() {
             d3.select('#damage-dates ' + id)
                 .append('div')
                     .attr('class', 'graph-descriptor circle')
-                    .html('Overall Damage Received');
+                    .html('Damage Received');
             
             // Circles          
             d3.select('#damage-dates ' + id)
@@ -1110,8 +1248,12 @@ function damage_dates() {
 
                     
         } // end for loop
-    
-        circletips(); 
+        
+        d3.select('#damage-dates')
+            .append('div')
+            .attr('class', 'spacer');
+            
+        circletips();
     });
 }
  
@@ -1165,9 +1307,9 @@ function data_radius(d) {
 }
 
 // functions
+money();
 messages();
 damage();
-money();
 
 // money_dates();
 // messages_dates();

@@ -1,30 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Visualizing Player Interactions in MMORPGs</title>
+        <title>Visualizing Player Inteactions in Online Games</title>
     
         <style type="text/css">
+        
             img {
                 width: 100%;
                 height: 100%;
                 margin: auto;
+                
             }
+            
             body {
                 margin: 0;
-            }           
+                overflow-x: hidden; 
+                overflow-y: auto;
+            }      
+            
         </style>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script type="text/javascript">
             
             var slide = 1;
+            var num_slides = 18;
             
             $(document).keydown(function(e) {
                 
                 if (e.keyCode == 39) { // left arrow key press
-                    if (slide < 14) { // if less than number of slides
+                    if (slide < num_slides) { // if less than number of slides
                         slide++;
-                        $('#image').attr("src", "images/presentation" + slide + ".jpg");
-                        if (slide == 14) {
+                        $('#image').attr("src", "images/final-presentation" + slide + ".jpg");
+                        if (slide == num_slides) {
                             $('#link').attr("href", "app.html");
                         }
                     }
@@ -34,7 +41,7 @@
                 
                     if (slide > 1) { // if less than number of slides
                         slide--;
-                        $('#image').attr("src", "images/presentation" + slide + ".jpg");
+                        $('#image').attr("src", "images/final-presentation" + slide + ".jpg");
                     }
                 }
             });
@@ -42,6 +49,6 @@
         </script>
     </head>
     <body>
-        <a id='link'><img id='image' src='images/presentation1.jpg' /></a>
+        <a id='link'><img id='image' src='images/final-presentation1.jpg' /></a>
     </body>
 </html>
