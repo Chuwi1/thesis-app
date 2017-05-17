@@ -2,7 +2,8 @@
 This repository contains updates and notes for the visualiztion application
 
 ## Visualization
-- [Prototype/Staging](https://thesis-app-neuralism.c9users.io/)
+- [Prototype/Staging](https://thesis-app-neuralism.c9users.io/app.html)
+- [Prototype/Staging with Slides](https://thesis-app-neuralism.c9users.io/)
 - [Hosted URL](http://joshua-tests.us-east-1.elasticbeanstalk.com/)
 
 ## Presentation Slides and Video
